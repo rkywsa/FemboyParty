@@ -160,8 +160,8 @@ animations = [{
 script = ExtResource("1_hstkp")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=29174334]
-position = Vector2(451, -311.81522)
-scale = Vector2(25.3125, 23.32405)
+position = Vector2(-1, -1)
+scale = Vector2(1.083, 1)
 sprite_frames = SubResource("SpriteFrames_4kxuq")
 animation = &"run"
-frame_progress = 0.05497006
+frame_progress = 0.15952434
