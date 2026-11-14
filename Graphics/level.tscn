@@ -15,10 +15,13 @@ sources/0 = SubResource("TileSetAtlasSource_gcbfm")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4kxuq"]
 size = Vector2(34, 9)
 
+[sub_resource type="RectangleShape2D" id="SpawnPipeWallShape"]
+size = Vector2(6, 68.5)
+
 [node name="Level" type="Node2D" unique_id=661646850]
 
 [node name="Player" parent="." unique_id=1078703586 instance=ExtResource("1_gcbfm")]
-position = Vector2(0, 189)
+position = Vector2(16, 120)
 
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=630245241]
 tile_set = SubResource("TileSet_mti6b")
@@ -240,6 +243,29 @@ texture = ExtResource("2_gcbfm")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe24/StaticBody2D" unique_id=451897706]
 shape = SubResource("RectangleShape2D_4kxuq")
+
+[node name="SpawnPipe" type="Node2D" parent="." unique_id=1913442513]
+position = Vector2(16, 0)
+
+[node name="Pipe spawn" type="Sprite2D" parent="SpawnPipe" unique_id=366216444]
+position = Vector2(-0.99999857, 22.848642)
+rotation = 1.5707964
+scale = Vector2(6.450081, 4.831134)
+texture = ExtResource("2_gcbfm")
+
+[node name="LeftWall" type="StaticBody2D" parent="SpawnPipe" unique_id=223991695]
+position = Vector2(-16, 117)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SpawnPipe/LeftWall" unique_id=533390456]
+position = Vector2(0, -25.5)
+shape = SubResource("SpawnPipeWallShape")
+
+[node name="RightWall" type="StaticBody2D" parent="SpawnPipe" unique_id=1055964455]
+position = Vector2(16, 117)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SpawnPipe/RightWall" unique_id=1107954074]
+position = Vector2(0, -25.25)
+shape = SubResource("SpawnPipeWallShape")
 
 [node name="Coin" parent="." unique_id=635060567 instance=ExtResource("3_x4jqn")]
 position = Vector2(55, 190)
