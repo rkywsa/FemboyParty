@@ -2,6 +2,7 @@ extends CharacterBody2D
 
 @onready var animated_sprite = $AnimatedSprite2D
 @onready var camera: Camera2D = $Camera2D
+@onready var playermusic = $PlayerMusic
 
 const SPEED = 300.0
 const JUMP_VELOCITY = -300.0
@@ -36,8 +37,10 @@ func _physics_process(delta: float) -> void:
 
 	if direction > 0:
 		animated_sprite.flip_h = false
+		playermusic.play()
 	elif direction < 0:
 		animated_sprite.flip_h = true
+		playermusic.play()
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 		
