@@ -7,4 +7,5 @@
 script = ExtResource("1_kplor")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=889528591]
+position = Vector2(34, 2)
 texture = ExtResource("2_4tr35")
