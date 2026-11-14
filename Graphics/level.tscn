@@ -6,8 +6,11 @@
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_gcbfm"]
 texture = ExtResource("1_yusdk")
 0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 1.1316719, -8, 0.60936165)
 1:0/0 = 0
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 0.78346443, -8, 0.60936165)
 2:0/0 = 0
+2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 0.78346443, -8, 0.60936165)
 0:1/0 = 0
 1:1/0 = 0
 2:1/0 = 0
@@ -19,6 +22,7 @@ texture = ExtResource("1_yusdk")
 2:3/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_4kxuq"]
+physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_gcbfm")
 
 [node name="Level" type="Node2D" unique_id=661646850]
