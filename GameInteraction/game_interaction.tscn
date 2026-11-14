@@ -1,11 +1,6 @@
 [gd_scene format=3 uid="uid://cu88wl02r68g8"]
 
 [ext_resource type="Script" uid="uid://cckanblaumg0y" path="res://GameInteraction/game_interaction.gd" id="1_kplor"]
-[ext_resource type="Texture2D" uid="uid://bmcvig06grhak" path="res://GameInteraction/jajo.webp" id="2_4tr35"]
 
 [node name="GameInteraction" type="Node2D" unique_id=370185918]
 script = ExtResource("1_kplor")
-
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=889528591]
-position = Vector2(34, 2)
-texture = ExtResource("2_4tr35")

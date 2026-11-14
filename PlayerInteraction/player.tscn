@@ -100,7 +100,7 @@ animations = [{
 }],
 "loop": 1,
 "name": &"idle",
-"speed": 5.0
+"speed": 4.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -153,8 +153,11 @@ animations = [{
 }],
 "loop": 1,
 "name": &"run",
-"speed": 10.0
+"speed": 12.0
 }]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_u0ya7"]
+size = Vector2(14, 17)
 
 [node name="Player" type="CharacterBody2D" unique_id=1078703586]
 script = ExtResource("1_hstkp")
@@ -164,4 +167,9 @@ position = Vector2(-1, -1)
 scale = Vector2(1.083, 1)
 sprite_frames = SubResource("SpriteFrames_4kxuq")
 animation = &"run"
-frame_progress = 0.15952434
+frame_progress = 0.33164588
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AnimatedSprite2D" unique_id=1151519414]
+position = Vector2(-0.92336106, 2.5)
+scale = Vector2(0.92336106, 1)
+shape = SubResource("RectangleShape2D_u0ya7")
