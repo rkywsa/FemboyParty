@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cu88wl02r68g8"]
+
+[ext_resource type="Script" uid="uid://cckanblaumg0y" path="res://GameInteraction/game_interaction.gd" id="1_kplor"]
+
+[node name="GameInteraction" type="Node2D" unique_id=370185918]
+script = ExtResource("1_kplor")
