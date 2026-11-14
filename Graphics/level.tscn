@@ -38,3 +38,5 @@ tile_set = SubResource("TileSet_4kxuq")
 
 [node name="Coin" parent="." unique_id=635060567 instance=ExtResource("3_x4jqn")]
 position = Vector2(88, 190)
+
+[connection signal="body_entered" from="Coin" to="Coin" method="_on_body_entered"]
