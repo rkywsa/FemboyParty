@@ -2,11 +2,12 @@
 
 [ext_resource type="Script" uid="uid://bljs7g2leppcg" path="res://Scripts/node_2d.gd" id="1_0e48y"]
 [ext_resource type="Texture2D" uid="uid://ddc2xhbaoru8d" path="res://icon.svg" id="1_wtcfe"]
+[ext_resource type="Script" uid="uid://cxrrrpdg5k3kr" path="res://sprite_2d.gd" id="3_epypp"]
 
 [node name="Node2D" type="Node2D" unique_id=139988833]
 script = ExtResource("1_0e48y")
 
-[node name="Icon" type="Sprite2D" parent="." unique_id=1427587680]
-position = Vector2(729.5, 153.25)
-scale = Vector2(8.632813, 2.2773438)
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2135763995]
+position = Vector2(463, 212)
 texture = ExtResource("1_wtcfe")
+script = ExtResource("3_epypp")
