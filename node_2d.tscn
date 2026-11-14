@@ -1,10 +1,12 @@
 [gd_scene format=3 uid="uid://dyo5l1owvlkxn"]
 
+[ext_resource type="Script" uid="uid://bljs7g2leppcg" path="res://Scripts/node_2d.gd" id="1_0e48y"]
 [ext_resource type="Texture2D" uid="uid://ddc2xhbaoru8d" path="res://icon.svg" id="1_wtcfe"]
 
-[node name="Node2D" type="Node2D" unique_id=667980171]
+[node name="Node2D" type="Node2D" unique_id=139988833]
+script = ExtResource("1_0e48y")
 
-[node name="Icon" type="Sprite2D" parent="." unique_id=1676953120]
-position = Vector2(568, 270.00003)
-scale = Vector2(3.0253906, 5.177734)
+[node name="Icon" type="Sprite2D" parent="." unique_id=1427587680]
+position = Vector2(729.5, 153.25)
+scale = Vector2(8.632813, 2.2773438)
 texture = ExtResource("1_wtcfe")
