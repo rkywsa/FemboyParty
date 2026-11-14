@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://bp7sg0q7nbx2u" path="res://PlayerInteraction/player.tscn" id="1_gcbfm"]
 [ext_resource type="Texture2D" uid="uid://darh6n7n7cskf" path="res://assets/sprites/platforms1.png" id="2_gcbfm"]
 [ext_resource type="PackedScene" uid="uid://6mn14fnkpghg" path="res://GameInteraction/coin.tscn" id="3_x4jqn"]
+[ext_resource type="Texture2D" uid="uid://moyfgbpoghqa" path="res://assets/sprites/pipe_support.png" id="4_ruodb"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_gcbfm"]
 texture = ExtResource("2_gcbfm")
@@ -24,7 +25,7 @@ tile_set = SubResource("TileSet_mti6b")
 [node name="Pipes" type="Node2D" parent="." unique_id=137251326]
 
 [node name="Pipe" type="Sprite2D" parent="Pipes" unique_id=2087773064]
-position = Vector2(0, 206)
+position = Vector2(16, 206.5)
 texture = ExtResource("2_gcbfm")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe" unique_id=2025198236]
@@ -33,7 +34,7 @@ texture = ExtResource("2_gcbfm")
 shape = SubResource("RectangleShape2D_4kxuq")
 
 [node name="Pipe2" type="Sprite2D" parent="Pipes" unique_id=789794087]
-position = Vector2(34, 206)
+position = Vector2(50, 206.5)
 texture = ExtResource("2_gcbfm")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe2" unique_id=1964449649]
@@ -42,7 +43,7 @@ texture = ExtResource("2_gcbfm")
 shape = SubResource("RectangleShape2D_4kxuq")
 
 [node name="Pipe3" type="Sprite2D" parent="Pipes" unique_id=387644546]
-position = Vector2(68, 206)
+position = Vector2(84, 206.5)
 texture = ExtResource("2_gcbfm")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe3" unique_id=1298463355]
@@ -50,25 +51,217 @@ texture = ExtResource("2_gcbfm")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe3/StaticBody2D" unique_id=1668593185]
 shape = SubResource("RectangleShape2D_4kxuq")
 
-[node name="Pipe4" type="Sprite2D" parent="Pipes" unique_id=1703554218]
-position = Vector2(-68, 206)
+[node name="Pipe6" type="Sprite2D" parent="Pipes" unique_id=1504773490]
+position = Vector2(118, 206.5)
 texture = ExtResource("2_gcbfm")
 
-[node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe4" unique_id=1284872099]
+[node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe6" unique_id=1730984650]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe4/StaticBody2D" unique_id=908333508]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe6/StaticBody2D" unique_id=1485354788]
 shape = SubResource("RectangleShape2D_4kxuq")
 
-[node name="Pipe5" type="Sprite2D" parent="Pipes" unique_id=1928976725]
-position = Vector2(-34, 206)
+[node name="Pipe7" type="Sprite2D" parent="Pipes" unique_id=188427774]
+position = Vector2(152, 206.5)
 texture = ExtResource("2_gcbfm")
 
-[node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe5" unique_id=830101332]
+[node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe7" unique_id=685407259]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe5/StaticBody2D" unique_id=914843938]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe7/StaticBody2D" unique_id=2078911811]
+shape = SubResource("RectangleShape2D_4kxuq")
+
+[node name="Pipe8" type="Sprite2D" parent="Pipes" unique_id=1684065725]
+position = Vector2(186, 206.5)
+texture = ExtResource("2_gcbfm")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe8" unique_id=1899535666]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe8/StaticBody2D" unique_id=27086198]
+shape = SubResource("RectangleShape2D_4kxuq")
+
+[node name="Pipe4" type="Sprite2D" parent="Pipes" unique_id=1656823594]
+position = Vector2(-187, 206.5)
+texture = ExtResource("2_gcbfm")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe4" unique_id=1056967318]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe4/StaticBody2D" unique_id=2021490711]
+shape = SubResource("RectangleShape2D_4kxuq")
+
+[node name="Pipe5" type="Sprite2D" parent="Pipes" unique_id=368033058]
+position = Vector2(-153, 206.5)
+texture = ExtResource("2_gcbfm")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe5" unique_id=451311343]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe5/StaticBody2D" unique_id=1652618097]
+shape = SubResource("RectangleShape2D_4kxuq")
+
+[node name="Pipe9" type="Sprite2D" parent="Pipes" unique_id=1584804114]
+position = Vector2(-119, 206.5)
+texture = ExtResource("2_gcbfm")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe9" unique_id=359230701]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe9/StaticBody2D" unique_id=453984340]
+shape = SubResource("RectangleShape2D_4kxuq")
+
+[node name="Pipe10" type="Sprite2D" parent="Pipes" unique_id=1660069279]
+position = Vector2(-85, 206.5)
+texture = ExtResource("2_gcbfm")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe10" unique_id=1250533612]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe10/StaticBody2D" unique_id=96144483]
+shape = SubResource("RectangleShape2D_4kxuq")
+
+[node name="Pipe11" type="Sprite2D" parent="Pipes" unique_id=1196324681]
+position = Vector2(-51, 206.5)
+texture = ExtResource("2_gcbfm")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe11" unique_id=1375357333]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe11/StaticBody2D" unique_id=113709125]
+shape = SubResource("RectangleShape2D_4kxuq")
+
+[node name="Pipe12" type="Sprite2D" parent="Pipes" unique_id=2112589171]
+position = Vector2(-17, 206.5)
+texture = ExtResource("2_gcbfm")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe12" unique_id=2473638]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe12/StaticBody2D" unique_id=432044870]
+shape = SubResource("RectangleShape2D_4kxuq")
+
+[node name="Pipe13" type="Sprite2D" parent="Pipes" unique_id=1913636351]
+position = Vector2(423, 206.5)
+texture = ExtResource("2_gcbfm")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe13" unique_id=665064924]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe13/StaticBody2D" unique_id=1122797883]
+shape = SubResource("RectangleShape2D_4kxuq")
+
+[node name="Pipe14" type="Sprite2D" parent="Pipes" unique_id=1311797280]
+position = Vector2(457, 206.5)
+texture = ExtResource("2_gcbfm")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe14" unique_id=1015844225]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe14/StaticBody2D" unique_id=1032590844]
+shape = SubResource("RectangleShape2D_4kxuq")
+
+[node name="Pipe15" type="Sprite2D" parent="Pipes" unique_id=1750062199]
+position = Vector2(491, 206.5)
+texture = ExtResource("2_gcbfm")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe15" unique_id=1766284465]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe15/StaticBody2D" unique_id=300669441]
+shape = SubResource("RectangleShape2D_4kxuq")
+
+[node name="Pipe16" type="Sprite2D" parent="Pipes" unique_id=2086655214]
+position = Vector2(525, 206.5)
+texture = ExtResource("2_gcbfm")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe16" unique_id=246682451]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe16/StaticBody2D" unique_id=903231937]
+shape = SubResource("RectangleShape2D_4kxuq")
+
+[node name="Pipe17" type="Sprite2D" parent="Pipes" unique_id=2072634242]
+position = Vector2(559, 206.5)
+texture = ExtResource("2_gcbfm")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe17" unique_id=114443757]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe17/StaticBody2D" unique_id=681232479]
+shape = SubResource("RectangleShape2D_4kxuq")
+
+[node name="Pipe18" type="Sprite2D" parent="Pipes" unique_id=1412416869]
+position = Vector2(593, 206.5)
+texture = ExtResource("2_gcbfm")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe18" unique_id=1469881279]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe18/StaticBody2D" unique_id=1443289720]
+shape = SubResource("RectangleShape2D_4kxuq")
+
+[node name="Pipe19" type="Sprite2D" parent="Pipes" unique_id=1091879062]
+position = Vector2(220, 206.5)
+texture = ExtResource("2_gcbfm")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe19" unique_id=1856418470]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe19/StaticBody2D" unique_id=2108549315]
+shape = SubResource("RectangleShape2D_4kxuq")
+
+[node name="Pipe20" type="Sprite2D" parent="Pipes" unique_id=1444012197]
+position = Vector2(254, 206.5)
+texture = ExtResource("2_gcbfm")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe20" unique_id=249113597]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe20/StaticBody2D" unique_id=1671957342]
+shape = SubResource("RectangleShape2D_4kxuq")
+
+[node name="Pipe21" type="Sprite2D" parent="Pipes" unique_id=1510384924]
+position = Vector2(288, 206.5)
+texture = ExtResource("2_gcbfm")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe21" unique_id=721539296]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe21/StaticBody2D" unique_id=556403761]
+shape = SubResource("RectangleShape2D_4kxuq")
+
+[node name="Pipe22" type="Sprite2D" parent="Pipes" unique_id=1750300033]
+position = Vector2(322, 206.5)
+texture = ExtResource("2_gcbfm")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe22" unique_id=1908148789]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe22/StaticBody2D" unique_id=942216935]
+shape = SubResource("RectangleShape2D_4kxuq")
+
+[node name="Pipe23" type="Sprite2D" parent="Pipes" unique_id=256697955]
+position = Vector2(356, 206.5)
+texture = ExtResource("2_gcbfm")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe23" unique_id=91542789]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe23/StaticBody2D" unique_id=1033841929]
+shape = SubResource("RectangleShape2D_4kxuq")
+
+[node name="Pipe24" type="Sprite2D" parent="Pipes" unique_id=249887085]
+position = Vector2(390, 206.5)
+texture = ExtResource("2_gcbfm")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Pipes/Pipe24" unique_id=1387648933]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe24/StaticBody2D" unique_id=451897706]
 shape = SubResource("RectangleShape2D_4kxuq")
 
 [node name="Coin" parent="." unique_id=635060567 instance=ExtResource("3_x4jqn")]
 position = Vector2(55, 190)
+
+[node name="Foreground" type="Node2D" parent="." unique_id=243273431]
+z_index = -1
+position = Vector2(0, 251)
+
+[node name="PipeSupport" type="Sprite2D" parent="Foreground" unique_id=1043388891]
+position = Vector2(3, 42.000004)
+scale = Vector2(2, 2)
+texture = ExtResource("4_ruodb")
+
+[node name="PipeSupport2" type="Sprite2D" parent="Foreground" unique_id=577963879]
+position = Vector2(270, -124)
+scale = Vector2(2, 2)
+texture = ExtResource("4_ruodb")
+flip_h = true
+flip_v = true
+
+[node name="PipeSupport3" type="Sprite2D" parent="Foreground" unique_id=2065941060]
+position = Vector2(271, 42)
+scale = Vector2(2, 2)
+texture = ExtResource("4_ruodb")
 
 [connection signal="body_entered" from="Coin" to="Coin" method="_on_body_entered"]
