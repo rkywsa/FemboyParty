@@ -1,9 +1,22 @@
 extends CharacterBody2D
 
 @onready var animated_sprite = $AnimatedSprite2D
+@onready var camera: Camera2D = $Camera2D
 
 const SPEED = 300.0
 const JUMP_VELOCITY = -300.0
+const INTRO_ZOOM_MULTIPLIER = 3.0
+const INTRO_ZOOM_DURATION = 1.0
+
+
+func _ready() -> void:
+	var normal_zoom := camera.zoom
+	camera.zoom = normal_zoom * INTRO_ZOOM_MULTIPLIER
+
+	var tween := create_tween()
+	tween.tween_property(camera, "zoom", normal_zoom, INTRO_ZOOM_DURATION) \
+		.set_trans(Tween.TRANS_CUBIC) \
+		.set_ease(Tween.EASE_OUT)
 
 
 func _physics_process(delta: float) -> void:
@@ -42,9 +55,9 @@ func _physics_process(delta: float) -> void:
 	
 
 
-func _on_coin_body_entered(body: Node2D) -> void:
+func _on_coin_body_entered(_body: Node2D) -> void:
 	pass # Replace with function body.
 
 
-func _on_coin_body_exited(body: Node2D) -> void:
+func _on_coin_body_exited(_body: Node2D) -> void:
 	pass # Replace with function body.
