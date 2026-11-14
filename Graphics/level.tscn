@@ -2,6 +2,8 @@
 
 [ext_resource type="PackedScene" uid="uid://bp7sg0q7nbx2u" path="res://PlayerInteraction/player.tscn" id="1_gcbfm"]
 [ext_resource type="Texture2D" uid="uid://darh6n7n7cskf" path="res://assets/sprites/platforms1.png" id="2_gcbfm"]
+[ext_resource type="Texture2D" uid="uid://dqyb5fqcu5tpn" path="res://assets/sprites/platforms.png" id="1_yusdk"]
+[ext_resource type="PackedScene" uid="uid://6mn14fnkpghg" path="res://GameInteraction/coin.tscn" id="3_x4jqn"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_gcbfm"]
 texture = ExtResource("2_gcbfm")
@@ -66,3 +68,5 @@ texture = ExtResource("2_gcbfm")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Pipes/Pipe5/StaticBody2D" unique_id=914843938]
 shape = SubResource("RectangleShape2D_4kxuq")
+[node name="Coin" parent="." unique_id=635060567 instance=ExtResource("3_x4jqn")]
+position = Vector2(88, 190)
