@@ -27,7 +27,7 @@ func _physics_process(delta: float) -> void:
 		animated_sprite.flip_h = true
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
-
+		
 	if not is_on_floor():
 		if animated_sprite.animation != "jump":
 			animated_sprite.play("jump")
@@ -40,3 +40,11 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	
 	
+
+
+func _on_coin_body_entered(body: Node2D) -> void:
+	pass # Replace with function body.
+
+
+func _on_coin_body_exited(body: Node2D) -> void:
+	pass # Replace with function body.
