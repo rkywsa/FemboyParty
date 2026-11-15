@@ -18,37 +18,40 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventJoypadButton and event.pressed:
-		if event.button_index == JOY_BUTTON_A:
-			var focused := get_viewport().gui_get_focus_owner()
-			if focused is Button and focused.is_visible_in_tree() and not focused.disabled:
-				focused.pressed.emit()
-				get_viewport().set_input_as_handled()
-		elif event.button_index == JOY_BUTTON_DPAD_UP:
-			_move_focus(-1)
-			get_viewport().set_input_as_handled()
-		elif event.button_index == JOY_BUTTON_DPAD_DOWN:
-			_move_focus(1)
-			get_viewport().set_input_as_handled()
-		elif event.button_index in [JOY_BUTTON_B, JOY_BUTTON_BACK]:
-			if controls_dialog.visible:
-				controls_dialog.hide()
-				controls_button.grab_focus()
-				get_viewport().set_input_as_handled()
+	var viewport := get_viewport()
+	if viewport == null:
 		return
 
-	if event is InputEventJoypadMotion:
-		if event.axis == JOY_AXIS_LEFT_Y:
-			if absf(event.axis_value) < 0.3:
-				nav_axis_latched = false
-			elif not nav_axis_latched and absf(event.axis_value) > 0.65:
-				_move_focus(1 if event.axis_value > 0.0 else -1)
-				nav_axis_latched = true
-				get_viewport().set_input_as_handled()
+	if event is InputEventJoypadButton and event.pressed:
+		if event.button_index == JOY_BUTTON_A:
+			var focused := viewport.gui_get_focus_owner()
+			if focused is Button and focused.is_visible_in_tree() and not focused.disabled:
+				# Set handled first because Start switches scenes.
+				viewport.set_input_as_handled()
+				focused.pressed.emit()
+		elif event.button_index == JOY_BUTTON_DPAD_UP:
+			viewport.set_input_as_handled()
+			_move_focus(-1)
+		elif event.button_index == JOY_BUTTON_DPAD_DOWN:
+			viewport.set_input_as_handled()
+			_move_focus(1)
+		elif event.button_index in [JOY_BUTTON_B, JOY_BUTTON_BACK] and controls_dialog.visible:
+			viewport.set_input_as_handled()
+			controls_dialog.hide()
+			controls_button.grab_focus()
+		return
+
+	if event is InputEventJoypadMotion and event.axis == JOY_AXIS_LEFT_Y:
+		if absf(event.axis_value) < 0.3:
+			nav_axis_latched = false
+		elif not nav_axis_latched and absf(event.axis_value) > 0.65:
+			viewport.set_input_as_handled()
+			_move_focus(1 if event.axis_value > 0.0 else -1)
+			nav_axis_latched = true
 
 
 func _move_focus(direction: int) -> void:
-	if controls_dialog.visible:
+	if controls_dialog.visible or menu_buttons.is_empty():
 		return
 	focus_index = posmod(focus_index + direction, menu_buttons.size())
 	menu_buttons[focus_index].grab_focus()

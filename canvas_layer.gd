@@ -15,26 +15,31 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	var viewport := get_viewport()
+	if viewport == null:
+		return
+
 	if event is InputEventJoypadButton and event.pressed:
 		if event.button_index == JOY_BUTTON_START:
+			viewport.set_input_as_handled()
 			toggle_pause()
-			get_viewport().set_input_as_handled()
 			return
 
 		if not overlay.visible:
 			return
 
 		if event.button_index == JOY_BUTTON_A:
-			var focused := get_viewport().gui_get_focus_owner()
+			var focused := viewport.gui_get_focus_owner()
 			if focused is Button and focused.is_visible_in_tree() and not focused.disabled:
+				# Mark handled before emitting: Restart can replace this scene and free this CanvasLayer.
+				viewport.set_input_as_handled()
 				focused.pressed.emit()
-				get_viewport().set_input_as_handled()
 		elif event.button_index in [JOY_BUTTON_DPAD_UP, JOY_BUTTON_DPAD_LEFT]:
+			viewport.set_input_as_handled()
 			_move_focus(-1)
-			get_viewport().set_input_as_handled()
 		elif event.button_index in [JOY_BUTTON_DPAD_DOWN, JOY_BUTTON_DPAD_RIGHT]:
+			viewport.set_input_as_handled()
 			_move_focus(1)
-			get_viewport().set_input_as_handled()
 		return
 
 	if event is InputEventJoypadMotion and overlay.visible:
@@ -42,21 +47,19 @@ func _unhandled_input(event: InputEvent) -> void:
 			if absf(event.axis_value) < 0.3:
 				nav_axis_latched = false
 			elif not nav_axis_latched and absf(event.axis_value) > 0.65:
-				_move_focus(1 if event.axis_value > 0.0 else -1)
+				viewport.set_input_as_handled()
+			_move_focus(1 if event.axis_value > 0.0 else -1)
 				nav_axis_latched = true
-				get_viewport().set_input_as_handled()
 		return
 
 	if event.is_action_pressed("ui_cancel") and not event.is_echo():
+		viewport.set_input_as_handled()
 		toggle_pause()
-		get_viewport().set_input_as_handled()
 
 
 func toggle_pause() -> void:
 	var should_pause := not get_tree().paused
-	get_tree().paused = should_pause
-	overlay.visible = should_pause
-	panel.visible = should_pause
+	_set_paused(should_pause)
 	if should_pause and not menu_buttons.is_empty():
 		focus_index = 0
 		menu_buttons[focus_index].grab_focus()
