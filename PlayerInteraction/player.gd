@@ -17,6 +17,7 @@ const ATTACK_COOLDOWN = 0.3
 var intro_waiting := true
 var movement_enabled := false
 var attacking := false
+var hurt_animation_playing := false
 var attack_on_cooldown := false
 var health: int
 
@@ -49,6 +50,7 @@ func take_damage(amount: int) -> void:
 		return
 
 	health = maxi(health - amount, 0)
+	_play_hurt()
 	health_changed.emit(health, max_health)
 
 
@@ -64,7 +66,7 @@ func _physics_process(delta: float) -> void:
 		velocity.y = JUMP_VELOCITY
 
 	if movement_enabled and Input.is_action_just_pressed("player_attack") \
-			and not attacking and not attack_on_cooldown:
+			and not attacking and not hurt_animation_playing and not attack_on_cooldown:
 		_play_attack()
 
 	# Get the input direction and handle the movement/deceleration.
@@ -92,7 +94,7 @@ func _physics_process(delta: float) -> void:
 		playermusic.stop()
 
 		
-	if not attacking:
+	if not attacking and not hurt_animation_playing:
 		if not is_on_floor():
 			if animated_sprite.animation != "jump":
 				animated_sprite.play("jump")
@@ -108,10 +110,23 @@ func _play_attack() -> void:
 	attacking = true
 	attack_on_cooldown = true
 	animated_sprite.play("hit")
-	await animated_sprite.animation_finished
+	var attack_duration: float = float(animated_sprite.sprite_frames.get_frame_count("hit")) \
+			/ animated_sprite.sprite_frames.get_animation_speed("hit")
+	await get_tree().create_timer(attack_duration).timeout
 	attacking = false
 	await get_tree().create_timer(ATTACK_COOLDOWN).timeout
 	attack_on_cooldown = false
+
+
+func _play_hurt() -> void:
+	if attacking:
+		attacking = false
+	hurt_animation_playing = true
+	animated_sprite.play("hurt")
+	var hurt_duration: float = float(animated_sprite.sprite_frames.get_frame_count("hurt")) \
+			/ animated_sprite.sprite_frames.get_animation_speed("hurt")
+	await get_tree().create_timer(hurt_duration).timeout
+	hurt_animation_playing = false
 	
 	
 
