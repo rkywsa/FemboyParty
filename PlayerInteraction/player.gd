@@ -32,6 +32,8 @@ var current_weapon: String = "sword"
 var knockback_direction: float = 0.0
 var knockback_time: float = 0.0
 var gamepad_jump_requested := false
+var rifle_visual: Node2D
+var rifle_sound: AudioStreamPlayer2D
 
 
 func _ready() -> void:
@@ -39,6 +41,8 @@ func _ready() -> void:
 	health = max_health
 	z_index = -1
 	animated_sprite.play("jump")
+	_create_rifle_visual()
+	_create_rifle_sound()
 
 	var normal_zoom := camera.zoom
 	camera.zoom = normal_zoom * INTRO_ZOOM_MULTIPLIER
@@ -55,6 +59,47 @@ func _ready() -> void:
 
 	z_index = 1
 	movement_enabled = true
+
+
+func _create_rifle_visual() -> void:
+	# Assemble a small pixel-style rifle from polygons so no extra image asset is needed.
+	rifle_visual = Node2D.new()
+	rifle_visual.name = "RifleVisual"
+	rifle_visual.visible = false
+	rifle_visual.z_index = 2
+	add_child(rifle_visual)
+
+	_add_rifle_part(PackedVector2Array([
+		Vector2(-12, -5), Vector2(-7, -8), Vector2(5, -8),
+		Vector2(9, -5), Vector2(8, 0), Vector2(-10, 0)
+	]), Color("#35323b"))
+	_add_rifle_part(PackedVector2Array([
+		Vector2(5, -6), Vector2(22, -6), Vector2(22, -3), Vector2(7, -3)
+	]), Color("#77727a"))
+	_add_rifle_part(PackedVector2Array([
+		Vector2(-11, -5), Vector2(-17, -7), Vector2(-17, -3), Vector2(-10, -1)
+	]), Color("#514c55"))
+	_add_rifle_part(PackedVector2Array([
+		Vector2(-2, -1), Vector2(3, -1), Vector2(1, 5), Vector2(-2, 5)
+	]), Color("#514c55"))
+	_add_rifle_part(PackedVector2Array([
+		Vector2(8, -8), Vector2(12, -10), Vector2(15, -10), Vector2(15, -8)
+	]), Color("#8b858d"))
+
+
+func _add_rifle_part(points: PackedVector2Array, part_color: Color) -> void:
+	var part := Polygon2D.new()
+	part.polygon = points
+	part.color = part_color
+	rifle_visual.add_child(part)
+
+
+func _create_rifle_sound() -> void:
+	rifle_sound = AudioStreamPlayer2D.new()
+	rifle_sound.name = "RifleSound"
+	rifle_sound.stream = load("res://assets/sounds/tap.wav") as AudioStream
+	rifle_sound.volume_db = -4.0
+	add_child(rifle_sound)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -88,6 +133,7 @@ func select_weapon(weapon_name: String) -> void:
 		return
 
 	current_weapon = weapon_name
+	rifle_visual.visible = current_weapon == "rifle"
 	weapon_changed.emit(current_weapon)
 
 
@@ -143,6 +189,10 @@ func _physics_process(delta: float) -> void:
 	if direction != 0.0:
 		facing_direction = signf(direction)
 		animated_sprite.flip_h = direction < 0.0
+
+	if current_weapon == "rifle":
+		rifle_visual.position = Vector2(8.0 * facing_direction, -7.0)
+		rifle_visual.scale.x = facing_direction
 
 	if knockback_time > 0.0:
 		knockback_time = maxf(knockback_time - delta, 0.0)
@@ -224,6 +274,8 @@ func _shoot_rifle() -> void:
 		if target is Node and target.is_in_group("enemy") and target.has_method("take_weapon_damage"):
 			target.call("take_weapon_damage", RIFLE_DAMAGE, global_position)
 
+	if rifle_sound.stream != null:
+		rifle_sound.play()
 	_show_rifle_shot(from, shot_end)
 
 
