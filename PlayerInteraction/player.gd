@@ -114,6 +114,16 @@ func take_damage(amount: int, source_position: Vector2) -> void:
 	health_changed.emit(health, max_health)
 
 
+func die() -> void:
+	if health <= 0:
+		return
+
+	health = 0
+	movement_enabled = false
+	velocity = Vector2.ZERO
+	health_changed.emit(health, max_health)
+
+
 func _physics_process(delta: float) -> void:
 	if intro_waiting:
 		gamepad_jump_requested = false
