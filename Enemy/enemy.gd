@@ -8,16 +8,34 @@ extends CharacterBody2D
 @export var attack_vertical_range: float = 64.0
 @export var damage: int = 10
 @export var attack_cooldown: float = 1.0
+@export var max_weapon_health: int = 6
 
 var player: CharacterBody2D
 var attack_timer := 0.0
+var weapon_health: int
+var defeated := false
 
 
 func _ready() -> void:
+	add_to_group("enemy")
+	weapon_health = max_weapon_health
 	animated_sprite.play("idle")
 
 
+func take_weapon_damage(amount: int) -> void:
+	if defeated or amount <= 0:
+		return
+
+	weapon_health = maxi(weapon_health - amount, 0)
+	if weapon_health == 0:
+		defeated = true
+		queue_free()
+
+
 func _physics_process(delta: float) -> void:
+	if defeated:
+		return
+
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
