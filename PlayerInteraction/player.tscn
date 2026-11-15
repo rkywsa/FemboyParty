@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://kf06xk8xhp6i" path="res://PlayerInteraction/player.gd" id="1_hstkp"]
 [ext_resource type="Texture2D" uid="uid://bntn5805x18hs" path="res://assets/sprites/knight.png" id="2_q3d3v"]
+[ext_resource type="AudioStream" uid="uid://bmby6qk84ndix" path="res://assets/sounds/footsteps.wav" id="3_pc0yj"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pc0yj"]
 atlas = ExtResource("2_q3d3v")
@@ -231,3 +232,6 @@ shape = SubResource("RectangleShape2D_q3d3v")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1449698762]
 zoom = Vector2(6, 6)
+
+[node name="PlayerAudio" type="AudioStreamPlayer2D" parent="." unique_id=2093132430]
+stream = ExtResource("3_pc0yj")

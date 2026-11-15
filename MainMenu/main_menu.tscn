@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cb1jsqj6bdwg"]
 
 [ext_resource type="Script" uid="uid://cakbfma68ujli" path="res://MainMenu/main_menu.gd" id="1_menu"]
+[ext_resource type="AudioStream" uid="uid://dqt7ucquebeag" path="res://assets/sounds/buttonclick.wav" id="2_3w4mj"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_normal"]
 bg_color = Color(0.42, 0.24, 0.82, 1)
@@ -61,5 +62,9 @@ theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("StyleBoxFlat_normal")
 theme_override_styles/hover = SubResource("StyleBoxFlat_hover")
 text = "Start"
+
+[node name="ButtonSound" type="AudioStreamPlayer2D" parent="." unique_id=22523363]
+stream = ExtResource("2_3w4mj")
+volume_db = 6.0
 
 [connection signal="pressed" from="CenterContainer/MenuContent/StartButton" to="." method="_on_start_button_pressed"]

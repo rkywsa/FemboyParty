@@ -1,7 +1,7 @@
 extends Control
 
-
 @onready var start_button: Button = $CenterContainer/MenuContent/StartButton
+@onready var buttonsound = $ButtonSound
 
 var transitioning := false
 
@@ -16,6 +16,10 @@ func _on_start_button_pressed() -> void:
 
 	transitioning = true
 	start_button.disabled = true
+
+	buttonsound.play()
+	await buttonsound.finished
+	
 
 	var error := get_tree().change_scene_to_file("res://Graphics/level.tscn")
 	if error != OK:
