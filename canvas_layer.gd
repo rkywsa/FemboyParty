@@ -2,26 +2,65 @@ extends CanvasLayer
 
 var overlay: ColorRect
 var panel: PanelContainer
+var controls_label: Label
+var menu_buttons: Array[Button] = []
+var focus_index := 0
+var nav_axis_latched := false
+
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-
 	layer = 10
-
 	build_menu()
 
+
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel") and not event.is_echo():
-		if get_tree().paused and not overlay.visible:
+	if event is InputEventJoypadButton and event.pressed:
+		if event.button_index == JOY_BUTTON_START:
+			toggle_pause()
+			get_viewport().set_input_as_handled()
 			return
+
+		if not overlay.visible:
+			return
+
+		if event.button_index == JOY_BUTTON_A:
+			var focused := get_viewport().gui_get_focus_owner()
+			if focused is Button and focused.is_visible_in_tree() and not focused.disabled:
+				focused.pressed.emit()
+				get_viewport().set_input_as_handled()
+		elif event.button_index in [JOY_BUTTON_DPAD_UP, JOY_BUTTON_DPAD_LEFT]:
+			_move_focus(-1)
+			get_viewport().set_input_as_handled()
+		elif event.button_index in [JOY_BUTTON_DPAD_DOWN, JOY_BUTTON_DPAD_RIGHT]:
+			_move_focus(1)
+			get_viewport().set_input_as_handled()
+		return
+
+	if event is InputEventJoypadMotion and overlay.visible:
+		if event.axis == JOY_AXIS_LEFT_Y:
+			if absf(event.axis_value) < 0.3:
+				nav_axis_latched = false
+			elif not nav_axis_latched and absf(event.axis_value) > 0.65:
+				_move_focus(1 if event.axis_value > 0.0 else -1)
+				nav_axis_latched = true
+				get_viewport().set_input_as_handled()
+		return
+
+	if event.is_action_pressed("ui_cancel") and not event.is_echo():
 		toggle_pause()
 		get_viewport().set_input_as_handled()
 
+
 func toggle_pause() -> void:
-	var paused := not get_tree().paused
-	get_tree().paused = paused
-	overlay.visible = paused
-	panel.visible = paused
+	var should_pause := not get_tree().paused
+	get_tree().paused = should_pause
+	overlay.visible = should_pause
+	panel.visible = should_pause
+	if should_pause and not menu_buttons.is_empty():
+		focus_index = 0
+		menu_buttons[focus_index].grab_focus()
+
 
 func build_menu() -> void:
 	overlay = ColorRect.new()
@@ -38,8 +77,7 @@ func build_menu() -> void:
 	overlay.add_child(center)
 
 	panel = PanelContainer.new()
-	panel.custom_minimum_size = Vector2(340, 220)
-	panel.visible = false
+	panel.custom_minimum_size = Vector2(380, 360)
 	center.add_child(panel)
 
 	var vbox := VBoxContainer.new()
@@ -52,29 +90,61 @@ func build_menu() -> void:
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vbox.add_child(title)
 
-	var resume := Button.new()
-	resume.text = "Resume"
-	resume.custom_minimum_size = Vector2(180, 42)
+	var controls_button := _make_button("Sterowanie")
+	controls_button.pressed.connect(_toggle_controls)
+	vbox.add_child(controls_button)
+	menu_buttons.append(controls_button)
+
+	controls_label = Label.new()
+	controls_label.text = "Ruch: lewy drążek / A-D / strzałki\nSkok: A / Spacja\nAtak: B / lewy przycisk myszy\nZmiana broni: RB / 1 / 2\nPauza: przycisk Menu (trzy kreski) / Esc"
+	controls_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	controls_label.visible = false
+	vbox.add_child(controls_label)
+
+	var resume := _make_button("Wznów")
 	resume.pressed.connect(func():
-		get_tree().paused = false
-		overlay.visible = false
+		_set_paused(false)
 	)
 	vbox.add_child(resume)
+	menu_buttons.append(resume)
 
-	var restart := Button.new()
-	restart.text = "Restart"
-	restart.custom_minimum_size = Vector2(180, 42)
+	var restart := _make_button("Restart")
 	restart.pressed.connect(func():
-		get_tree().paused = false
+		_set_paused(false)
 		get_tree().reload_current_scene()
 	)
 	vbox.add_child(restart)
+	menu_buttons.append(restart)
 
-	var quit := Button.new()
-	quit.text = "Quit"
-	quit.custom_minimum_size = Vector2(180, 42)
+	var quit := _make_button("Wyjdź")
 	quit.pressed.connect(func():
-		get_tree().paused = false
+		_set_paused(false)
 		get_tree().quit()
 	)
 	vbox.add_child(quit)
+	menu_buttons.append(quit)
+
+
+func _make_button(button_text: String) -> Button:
+	var button := Button.new()
+	button.text = button_text
+	button.custom_minimum_size = Vector2(240, 42)
+	button.focus_mode = Control.FOCUS_ALL
+	return button
+
+
+func _move_focus(direction: int) -> void:
+	if menu_buttons.is_empty():
+		return
+	focus_index = posmod(focus_index + direction, menu_buttons.size())
+	menu_buttons[focus_index].grab_focus()
+
+
+func _toggle_controls() -> void:
+	controls_label.visible = not controls_label.visible
+
+
+func _set_paused(should_pause: bool) -> void:
+	get_tree().paused = should_pause
+	overlay.visible = should_pause
+	panel.visible = should_pause
