@@ -31,7 +31,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.button_index == JOY_BUTTON_A:
 			var focused := viewport.gui_get_focus_owner()
 			if focused is Button and focused.is_visible_in_tree() and not focused.disabled:
-				# Mark handled before emitting: Restart can replace this scene and free this CanvasLayer.
+				# Handle input before emitting: Restart may replace this scene.
 				viewport.set_input_as_handled()
 				focused.pressed.emit()
 		elif event.button_index in [JOY_BUTTON_DPAD_UP, JOY_BUTTON_DPAD_LEFT]:
@@ -48,7 +48,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				nav_axis_latched = false
 			elif not nav_axis_latched and absf(event.axis_value) > 0.65:
 				viewport.set_input_as_handled()
-			_move_focus(1 if event.axis_value > 0.0 else -1)
+				_move_focus(1 if event.axis_value > 0.0 else -1)
 				nav_axis_latched = true
 		return
 
