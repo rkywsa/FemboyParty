@@ -15,7 +15,8 @@ const END_X: float = 2700.0
 
 var coins: int = 0
 var sword_button: Button
-var rifle_button: Button
+var bow_button: Button
+var ammo_label: Label
 var end_reached := false
 var menu_buttons: Array[Button] = []
 var menu_focus_index := 0
@@ -34,7 +35,9 @@ func _ready() -> void:
 	health_bar.value = player.health
 	player.health_changed.connect(_on_player_health_changed)
 	player.weapon_changed.connect(_on_player_weapon_changed)
+	player.arrow_ammo_changed.connect(_on_player_arrow_ammo_changed)
 	_on_player_weapon_changed(player.current_weapon)
+	_on_player_arrow_ammo_changed(player.arrow_ammo, player.MAX_ARROW_AMMO)
 	menu_buttons = [restart_button, quit_button]
 	backgroundmusic.play()
 	await get_tree().create_timer(2.38).timeout
@@ -155,7 +158,7 @@ func _add_weapon_selector() -> void:
 	panel.name = "WeaponSelector"
 	panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	panel.offset_left = 12.0
-	panel.offset_top = -132.0
+	panel.offset_top = -156.0
 	panel.offset_right = 280.0
 	panel.offset_bottom = -12.0
 	panel.add_theme_stylebox_override("panel", _make_weapon_panel_style())
@@ -177,11 +180,16 @@ func _add_weapon_selector() -> void:
 	layout.add_child(weapon_row)
 
 	sword_button = _make_weapon_button("SWORD\n[1]")
-	rifle_button = _make_weapon_button("GUN\n[2]")
+	bow_button = _make_weapon_button("BOW\n[2]")
 	weapon_row.add_child(_make_weapon_slot(sword_button))
-	weapon_row.add_child(_make_weapon_slot(rifle_button))
+	weapon_row.add_child(_make_weapon_slot(bow_button))
 	sword_button.pressed.connect(player.select_weapon.bind("sword"))
-	rifle_button.pressed.connect(player.select_weapon.bind("rifle"))
+	bow_button.pressed.connect(player.select_weapon.bind("bow"))
+
+	ammo_label = Label.new()
+	ammo_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	ammo_label.add_theme_font_size_override("font_size", 12)
+	layout.add_child(ammo_label)
 
 
 func _make_weapon_slot(button: Button) -> CenterContainer:
@@ -229,11 +237,15 @@ func _make_weapon_button_style(selected: bool) -> StyleBoxFlat:
 func _on_player_weapon_changed(weapon_name: String) -> void:
 	var sword_selected := weapon_name == "sword"
 	sword_button.custom_minimum_size = Vector2(104.0, 62.0) if sword_selected else Vector2(88.0, 48.0)
-	rifle_button.custom_minimum_size = Vector2(104.0, 62.0) if not sword_selected else Vector2(88.0, 48.0)
+	bow_button.custom_minimum_size = Vector2(104.0, 62.0) if not sword_selected else Vector2(88.0, 48.0)
 	sword_button.add_theme_font_size_override("font_size", 14 if sword_selected else 12)
-	rifle_button.add_theme_font_size_override("font_size", 14 if not sword_selected else 12)
+	bow_button.add_theme_font_size_override("font_size", 14 if not sword_selected else 12)
 	_set_weapon_button_style(sword_button, sword_selected)
-	_set_weapon_button_style(rifle_button, not sword_selected)
+	_set_weapon_button_style(bow_button, not sword_selected)
+
+
+func _on_player_arrow_ammo_changed(current_ammo: int, maximum_ammo: int) -> void:
+	ammo_label.text = "ARROWS: %d / %d" % [current_ammo, maximum_ammo]
 
 
 func _set_weapon_button_style(button: Button, selected: bool) -> void:

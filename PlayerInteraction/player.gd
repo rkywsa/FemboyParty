@@ -2,6 +2,9 @@ extends CharacterBody2D
 
 signal health_changed(current_health: int, maximum_health: int)
 signal weapon_changed(weapon_name: String)
+signal arrow_ammo_changed(current_ammo: int, maximum_ammo: int)
+
+const ARROW_SCENE: PackedScene = preload("res://arrow.tscn")
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var camera: Camera2D = $Camera2D
@@ -14,10 +17,12 @@ const JUMP_VELOCITY: float = -300.0
 const INTRO_ZOOM_MULTIPLIER: float = 3.0
 const INTRO_ZOOM_DURATION: float = 2.0
 const ATTACK_COOLDOWN: float = 1.0
+const BOW_COOLDOWN: float = 0.3
+const MAX_ARROW_AMMO: int = 6
+const AMMO_PER_KILL: int = 2
 const SWORD_RANGE: float = 42.0
-const RIFLE_RANGE: float = 600.0
 const SWORD_DAMAGE: int = 3
-const RIFLE_DAMAGE: int = 2
+const ARROW_DAMAGE: int = 2
 const KNOCKBACK_SPEED: float = 100.0
 const KNOCKBACK_DURATION: float = 0.1
 
@@ -26,14 +31,16 @@ var movement_enabled := false
 var attacking := false
 var hurt_animation_playing := false
 var attack_on_cooldown := false
+var bow_on_cooldown := false
 var health: int
+var arrow_ammo: int = MAX_ARROW_AMMO
 var facing_direction: float = 1.0
 var current_weapon: String = "sword"
 var knockback_direction: float = 0.0
 var knockback_time: float = 0.0
 var gamepad_jump_requested := false
-var rifle_visual: Node2D
-var rifle_sound: AudioStreamPlayer2D
+var bow_visual: Node2D
+var bow_sound: AudioStreamPlayer2D
 
 
 func _ready() -> void:
@@ -41,8 +48,8 @@ func _ready() -> void:
 	health = max_health
 	z_index = -1
 	animated_sprite.play("jump")
-	_create_rifle_visual()
-	_create_rifle_sound()
+	_create_bow_visual()
+	_create_bow_sound()
 
 	var normal_zoom := camera.zoom
 	camera.zoom = normal_zoom * INTRO_ZOOM_MULTIPLIER
@@ -61,48 +68,34 @@ func _ready() -> void:
 	movement_enabled = true
 
 
-func _create_rifle_visual() -> void:
-	# Small, axis-aligned color blocks keep the hand-built gun pixel-shaped.
-	rifle_visual = Node2D.new()
-	rifle_visual.name = "RifleVisual"
-	rifle_visual.visible = false
-	rifle_visual.z_index = 2
-	add_child(rifle_visual)
+func _create_bow_visual() -> void:
+	bow_visual = Node2D.new()
+	bow_visual.name = "BowVisual"
+	bow_visual.visible = false
+	bow_visual.z_index = 2
+	add_child(bow_visual)
 
-	# Barrel, receiver, stock, grip, and pixel highlights; all dimensions are integers.
-	_add_rifle_part(PackedVector2Array([
-		Vector2(4, -2), Vector2(14, -2), Vector2(14, 0), Vector2(4, 0)
-	]), Color("#77727a"))
-	_add_rifle_part(PackedVector2Array([
-		Vector2(-4, -3), Vector2(6, -3), Vector2(6, 1), Vector2(-4, 1)
-	]), Color("#35323b"))
-	_add_rifle_part(PackedVector2Array([
-		Vector2(-7, -2), Vector2(-4, -2), Vector2(-4, 1), Vector2(-7, 1)
-	]), Color("#514c55"))
-	_add_rifle_part(PackedVector2Array([
-		Vector2(0, 1), Vector2(3, 1), Vector2(2, 5), Vector2(0, 5)
-	]), Color("#514c55"))
-	_add_rifle_part(PackedVector2Array([
-		Vector2(3, -3), Vector2(6, -3), Vector2(6, -2), Vector2(3, -2)
-	]), Color("#aaa3ad"))
-	_add_rifle_part(PackedVector2Array([
-		Vector2(7, -1), Vector2(10, -1), Vector2(10, 0), Vector2(7, 0)
-	]), Color("#aaa3ad"))
+	var bow := Line2D.new()
+	bow.width = 2.0
+	bow.default_color = Color("#80532f")
+	bow.points = PackedVector2Array([
+		Vector2(0, -8), Vector2(4, -5), Vector2(6, 0), Vector2(4, 5), Vector2(0, 8)
+	])
+	bow_visual.add_child(bow)
+
+	var string := Line2D.new()
+	string.width = 1.0
+	string.default_color = Color("#d8c99e")
+	string.points = PackedVector2Array([Vector2(0, -8), Vector2(0, 8)])
+	bow_visual.add_child(string)
 
 
-func _add_rifle_part(points: PackedVector2Array, part_color: Color) -> void:
-	var part := Polygon2D.new()
-	part.polygon = points
-	part.color = part_color
-	rifle_visual.add_child(part)
-
-
-func _create_rifle_sound() -> void:
-	rifle_sound = AudioStreamPlayer2D.new()
-	rifle_sound.name = "RifleSound"
-	rifle_sound.stream = load("res://assets/sounds/tap.wav") as AudioStream
-	rifle_sound.volume_db = -4.0
-	add_child(rifle_sound)
+func _create_bow_sound() -> void:
+	bow_sound = AudioStreamPlayer2D.new()
+	bow_sound.name = "BowSound"
+	bow_sound.stream = load("res://assets/sounds/tap.wav") as AudioStream
+	bow_sound.volume_db = -4.0
+	add_child(bow_sound)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -111,7 +104,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			JOY_BUTTON_A:
 				gamepad_jump_requested = true
 			JOY_BUTTON_RIGHT_SHOULDER:
-				select_weapon("rifle" if current_weapon == "sword" else "sword")
+				select_weapon("bow" if current_weapon == "sword" else "sword")
 			JOY_BUTTON_B:
 				_use_current_weapon()
 		return
@@ -120,7 +113,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.keycode == KEY_1:
 			select_weapon("sword")
 		elif event.keycode == KEY_2:
-			select_weapon("rifle")
+			select_weapon("bow")
 
 	if event is InputEventMouseButton \
 			and event.button_index == MOUSE_BUTTON_LEFT \
@@ -129,14 +122,14 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func select_weapon(weapon_name: String) -> void:
-	if weapon_name not in ["sword", "rifle"]:
+	if weapon_name not in ["sword", "bow"]:
 		push_warning("Unknown weapon selected: %s" % weapon_name)
 		return
 	if current_weapon == weapon_name:
 		return
 
 	current_weapon = weapon_name
-	rifle_visual.visible = current_weapon == "rifle"
+	bow_visual.visible = current_weapon == "bow"
 	weapon_changed.emit(current_weapon)
 
 
@@ -146,7 +139,7 @@ func _use_current_weapon() -> void:
 	if current_weapon == "sword":
 		_play_attack()
 	else:
-		_shoot_rifle()
+		_shoot_bow()
 
 
 func take_damage(amount: int, source_position: Vector2) -> void:
@@ -173,6 +166,29 @@ func die() -> void:
 	health_changed.emit(health, max_health)
 
 
+func add_arrow_ammo(amount: int) -> void:
+	if amount <= 0 or arrow_ammo >= MAX_ARROW_AMMO:
+		return
+
+	arrow_ammo = mini(arrow_ammo + amount, MAX_ARROW_AMMO)
+	arrow_ammo_changed.emit(arrow_ammo, MAX_ARROW_AMMO)
+
+
+func damage_enemy(enemy: Node, amount: int) -> void:
+	if not enemy.has_signal("enemy_defeated"):
+		push_warning("Enemy is missing its enemy_defeated signal: %s" % enemy.name)
+		return
+
+	var defeated_callable := Callable(self, "_on_enemy_defeated")
+	if not enemy.is_connected("enemy_defeated", defeated_callable):
+		enemy.connect("enemy_defeated", defeated_callable)
+	enemy.call("take_weapon_damage", amount, global_position)
+
+
+func _on_enemy_defeated() -> void:
+	add_arrow_ammo(AMMO_PER_KILL)
+
+
 func _physics_process(delta: float) -> void:
 	if intro_waiting:
 		gamepad_jump_requested = false
@@ -193,9 +209,9 @@ func _physics_process(delta: float) -> void:
 		facing_direction = signf(direction)
 		animated_sprite.flip_h = direction < 0.0
 
-	if current_weapon == "rifle":
-		rifle_visual.position = Vector2(3.0 * facing_direction, 1.0)
-		rifle_visual.scale.x = facing_direction
+	if current_weapon == "bow":
+		bow_visual.position = Vector2(3.0 * facing_direction, 1.0)
+		bow_visual.scale.x = facing_direction
 
 	if knockback_time > 0.0:
 		knockback_time = maxf(knockback_time - delta, 0.0)
@@ -260,39 +276,34 @@ func _hit_enemy_with_sword() -> void:
 			target = enemy
 
 	if is_instance_valid(target) and target.has_method("take_weapon_damage"):
-		target.call("take_weapon_damage", SWORD_DAMAGE, global_position)
+		damage_enemy(target, SWORD_DAMAGE)
 
 
-func _shoot_rifle() -> void:
-	# Fire from the lowered gun's muzzle, so the yellow shot visibly exits its barrel.
-	var muzzle := global_position + Vector2(17.0 * facing_direction, 1.0)
-	var to := muzzle + Vector2(facing_direction * RIFLE_RANGE, 0.0)
-	var query := PhysicsRayQueryParameters2D.create(muzzle, to)
-	query.exclude = [self]
-	var hit := get_world_2d().direct_space_state.intersect_ray(query)
+func _shoot_bow() -> void:
+	if bow_on_cooldown or arrow_ammo <= 0:
+		return
 
-	var shot_end: Vector2 = to
-	if not hit.is_empty():
-		shot_end = hit["position"]
-		var target: Object = hit["collider"]
-		if target is Node and target.is_in_group("enemy") and target.has_method("take_weapon_damage"):
-			target.call("take_weapon_damage", RIFLE_DAMAGE, global_position)
+	arrow_ammo -= 1
+	arrow_ammo_changed.emit(arrow_ammo, MAX_ARROW_AMMO)
+	bow_on_cooldown = true
 
-	if rifle_sound.stream != null:
-		rifle_sound.play()
-	_show_rifle_shot(muzzle, shot_end)
+	var arrow := ARROW_SCENE.instantiate() as Area2D
+	var scene_root := get_tree().current_scene
+	if scene_root == null:
+		push_error("Could not fire arrow because there is no current scene.")
+		arrow.queue_free()
+		arrow_ammo = mini(arrow_ammo + 1, MAX_ARROW_AMMO)
+		arrow_ammo_changed.emit(arrow_ammo, MAX_ARROW_AMMO)
+		bow_on_cooldown = false
+		return
 
-
-func _show_rifle_shot(from: Vector2, to: Vector2) -> void:
-	var shot_line := Line2D.new()
-	shot_line.width = 1.0
-	shot_line.antialiased = false
-	shot_line.default_color = Color("#ffe52b")
-	shot_line.points = PackedVector2Array([to_local(from), to_local(to)])
-	add_child(shot_line)
-	var tween := create_tween()
-	tween.tween_property(shot_line, "modulate:a", 0.0, 0.12)
-	tween.finished.connect(shot_line.queue_free)
+	scene_root.add_child(arrow)
+	arrow.global_position = global_position + Vector2(9.0 * facing_direction, 0.0)
+	arrow.call("launch", facing_direction, ARROW_DAMAGE, self)
+	if bow_sound.stream != null:
+		bow_sound.play()
+	await get_tree().create_timer(BOW_COOLDOWN).timeout
+	bow_on_cooldown = false
 
 
 func _play_hurt() -> void:

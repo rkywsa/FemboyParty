@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+signal enemy_defeated
+
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 
@@ -40,6 +42,7 @@ func take_weapon_damage(amount: int, source_position: Vector2) -> void:
 	weapon_health = maxi(weapon_health - amount, 0)
 	if weapon_health == 0:
 		defeated = true
+		enemy_defeated.emit()
 		velocity = Vector2.ZERO
 		collision_shape.set_deferred("disabled", true)
 		animated_sprite.play("die")
