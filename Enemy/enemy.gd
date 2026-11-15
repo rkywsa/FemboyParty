@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
-@export var speed: float = 45.0
+@export_range(0.0, 500.0, 1.0, "or_greater") var speed: float = 50.0
 @export var stopping_distance: float = 20.0
 
 var player: CharacterBody2D

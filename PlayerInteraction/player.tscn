@@ -129,7 +129,6 @@ region = Rect2(192, 96, 32, 32)
 atlas = ExtResource("2_q3d3v")
 region = Rect2(224, 96, 32, 32)
 
-
 [sub_resource type="SpriteFrames" id="SpriteFrames_4kxuq"]
 animations = [{
 "frames": [{
@@ -260,8 +259,8 @@ animations = [{
 "speed": 12.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_q3d3v"]
-size = Vector2(16, 17)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2jkg5"]
+size = Vector2(14, 20)
 
 [node name="Player" type="CharacterBody2D" unique_id=1078703586]
 position = Vector2(1, 0)
@@ -271,13 +270,11 @@ script = ExtResource("1_hstkp")
 position = Vector2(-1, -1)
 scale = Vector2(1.083, 1)
 sprite_frames = SubResource("SpriteFrames_4kxuq")
-<<<<<<< HEAD
 animation = &"idle"
->>>>>>> b43a1c616f886fc968f24942c0df241578b660c2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1151519414]
-position = Vector2(-2, 1.5)
-shape = SubResource("RectangleShape2D_q3d3v")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1161007918]
+position = Vector2(-1, 1)
+shape = SubResource("RectangleShape2D_2jkg5")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1449698762]
 zoom = Vector2(6, 6)
