@@ -30,7 +30,7 @@ position = Vector2(16, 120)
 
 [node name="Enemy" parent="." unique_id=745031822 instance=ExtResource("8_enemy")]
 position = Vector2(359, 182)
-speed = 200.095
+speed = 100.0
 
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=630245241]
 tile_set = SubResource("TileSet_mti6b")
