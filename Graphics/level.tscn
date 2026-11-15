@@ -499,20 +499,20 @@ texture = ExtResource("7_dvkd8")
 
 [node name="Background2" type="Sprite2D" parent="." unique_id=1670017272]
 z_index = -10
-position = Vector2(938.2152, -141)
-scale = Vector2(1.1527778, 1)
+position = Vector2(-102.50006, 171.5)
+scale = Vector2(1.6262926, 1.5130209)
 texture = ExtResource("7_dvkd8")
 
 [node name="Background3" type="Sprite2D" parent="." unique_id=1225550447]
 z_index = -10
-position = Vector2(1717.4307, -141)
-scale = Vector2(1.1527778, 1)
+position = Vector2(923.99994, 173)
+scale = Vector2(1.4062037, 1.4947916)
 texture = ExtResource("7_dvkd8")
 
 [node name="Background4" type="Sprite2D" parent="." unique_id=1163172564]
 z_index = -10
-position = Vector2(2496.4307, -141)
-scale = Vector2(1.1527778, 1)
+position = Vector2(1948, 171)
+scale = Vector2(1.6171116, 1.5208334)
 texture = ExtResource("7_dvkd8")
 
 [node name="pipebye" type="AudioStreamPlayer2D" parent="." unique_id=747031822]
@@ -524,7 +524,7 @@ volume_db = -5.0
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=689252091]
 
-[node name="CoinsLabel" type="Label" parent="HUD"]
+[node name="CoinsLabel" type="Label" parent="HUD" unique_id=1780873445]
 offset_left = 24.0
 offset_top = 16.0
 offset_right = 324.0
@@ -543,6 +543,7 @@ offset_left = -664.0
 offset_top = 16.0
 offset_right = -16.0
 offset_bottom = 156.0
+grow_horizontal = 0
 
 [node name="GameOverLayer" type="CanvasLayer" parent="." unique_id=1013662825]
 layer = 20

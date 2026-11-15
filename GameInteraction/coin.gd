@@ -16,7 +16,6 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 
 	collected = true
-	monitoring = false
 	visible = false
 	collision_shape.set_deferred("disabled", true)
 

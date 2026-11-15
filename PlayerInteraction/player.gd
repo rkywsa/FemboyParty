@@ -160,7 +160,7 @@ func _hit_enemy_with_sword() -> void:
 
 
 func _shoot_rifle() -> void:
-	var from := global_position + Vector2(0.0, -8.0)
+	var from := global_position + Vector2(0.0, 4.0)
 	var to := from + Vector2(facing_direction * RIFLE_RANGE, 0.0)
 	var query := PhysicsRayQueryParameters2D.create(from, to)
 	query.exclude = [self]
