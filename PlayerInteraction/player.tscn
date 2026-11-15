@@ -2,7 +2,20 @@
 
 [ext_resource type="Script" uid="uid://kf06xk8xhp6i" path="res://PlayerInteraction/player.gd" id="1_hstkp"]
 [ext_resource type="Texture2D" uid="uid://bntn5805x18hs" path="res://assets/sprites/knight.png" id="2_q3d3v"]
+[ext_resource type="Texture2D" uid="uid://x17fwjy11cbb" path="res://assets/sprites/knightAtack2.png" id="2_yebv0"]
 [ext_resource type="AudioStream" uid="uid://bmby6qk84ndix" path="res://assets/sounds/footsteps.wav" id="3_pc0yj"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_puius"]
+atlas = ExtResource("2_yebv0")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ikkx5"]
+atlas = ExtResource("2_yebv0")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5rx5h"]
+atlas = ExtResource("2_yebv0")
+region = Rect2(64, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pc0yj"]
 atlas = ExtResource("2_q3d3v")
@@ -116,6 +129,20 @@ region = Rect2(224, 96, 32, 32)
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_puius")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ikkx5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5rx5h")
+}],
+"loop": 1,
+"name": &"atack",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_pc0yj")
 }, {
 "duration": 1.0,
@@ -222,9 +249,8 @@ script = ExtResource("1_hstkp")
 position = Vector2(-1, -1)
 scale = Vector2(1.083, 1)
 sprite_frames = SubResource("SpriteFrames_4kxuq")
-animation = &"jump"
-frame = 5
-frame_progress = 0.9088868
+animation = &"atack"
+frame_progress = 0.45243996
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1151519414]
 position = Vector2(-2, 1.5)
