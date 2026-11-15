@@ -2,6 +2,7 @@ extends Node2D
 
 @onready var coin_sound: AudioStreamPlayer2D = $CoinSound
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var collision_shape: CollisionShape2D = $CollisionShape2D
 
 var collected := false
 
@@ -15,16 +16,15 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 
 	collected = true
-	set_deferred("monitoring", false)
+	monitoring = false
+	visible = false
+	collision_shape.set_deferred("disabled", true)
 
-	# The level root owns the counter; keep the coin independent of the HUD.
-	var level: Node = get_tree().current_scene
+	var level := get_tree().current_scene
 	if level != null and level.has_method("add_coin"):
 		level.call("add_coin", 1)
-	else:
-		push_warning("Coin collected, but the current scene has no add_coin() method.")
 
-	# Detach the sound so it can finish after this coin is removed.
+	# Keep the pickup sound alive after this coin node is removed.
 	if is_instance_valid(coin_sound) and level != null:
 		coin_sound.reparent(level)
 		coin_sound.finished.connect(coin_sound.queue_free)
