@@ -2,17 +2,21 @@ extends CharacterBody2D
 
 signal health_changed(current_health: int, maximum_health: int)
 
-@onready var animated_sprite = $AnimatedSprite2D
+@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var camera: Camera2D = $Camera2D
-@onready var playermusic = $PlayerAudio
+@onready var playermusic: AudioStreamPlayer2D = $PlayerAudio
 
 @export var max_health: int = 100
 
-const SPEED = 100.0
-const JUMP_VELOCITY = -300.0
-const INTRO_ZOOM_MULTIPLIER = 3.0
-const INTRO_ZOOM_DURATION = 2.0
-const ATTACK_COOLDOWN = 1.0
+const SPEED: float = 100.0
+const JUMP_VELOCITY: float = -300.0
+const INTRO_ZOOM_MULTIPLIER: float = 3.0
+const INTRO_ZOOM_DURATION: float = 2.0
+const ATTACK_COOLDOWN: float = 1.0
+const SWORD_RANGE: float = 42.0
+const RIFLE_RANGE: float = 600.0
+const SWORD_DAMAGE: int = 3
+const RIFLE_DAMAGE: int = 2
 
 var intro_waiting := true
 var movement_enabled := false
@@ -20,6 +24,8 @@ var attacking := false
 var hurt_animation_playing := false
 var attack_on_cooldown := false
 var health: int
+var facing_direction: float = 1.0
+var current_weapon: String = "sword"
 
 
 func _ready() -> void:
@@ -45,6 +51,26 @@ func _ready() -> void:
 	movement_enabled = true
 
 
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_1:
+			current_weapon = "sword"
+			print("Wybrano miecz (1). Atak: lewy przycisk myszy.")
+		elif event.keycode == KEY_2:
+			current_weapon = "rifle"
+			print("Wybrano karabin (2). Strzał: lewy przycisk myszy.")
+
+	if event is InputEventMouseButton \
+			and event.button_index == MOUSE_BUTTON_LEFT \
+			and event.pressed:
+		if not movement_enabled or intro_waiting:
+			return
+		if current_weapon == "sword":
+			_play_attack()
+		else:
+			_shoot_rifle()
+
+
 func take_damage(amount: int) -> void:
 	if not movement_enabled or amount <= 0 or health <= 0:
 		return
@@ -58,58 +84,50 @@ func _physics_process(delta: float) -> void:
 	if intro_waiting:
 		return
 
-	# Add the gravity.
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
 	if movement_enabled and Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 
-	if movement_enabled and Input.is_action_just_pressed("player_attack") \
-			and not attacking and not hurt_animation_playing and not attack_on_cooldown:
-		_play_attack()
-
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
 	var direction := 0.0
 	if movement_enabled:
 		direction = Input.get_axis("ui_left", "ui_right")
-	if direction:
-		velocity.x = direction * SPEED
 
-	if direction != 0:
+	if direction != 0.0:
 		velocity.x = direction * SPEED
+		facing_direction = signf(direction)
+		animated_sprite.flip_h = direction < 0.0
 	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
+		velocity.x = move_toward(velocity.x, 0.0, SPEED)
 
-	if direction > 0:
-		animated_sprite.flip_h = false
-	elif direction < 0:
-		animated_sprite.flip_h = true
-
-	if direction != 0 and is_on_floor():
+	if direction != 0.0 and is_on_floor():
 		if not playermusic.playing:
 			playermusic.play()
 	elif playermusic.playing:
 		playermusic.stop()
 
-		
 	if not attacking and not hurt_animation_playing:
 		if not is_on_floor():
 			if animated_sprite.animation != "jump":
 				animated_sprite.play("jump")
-		elif direction != 0:
+		elif direction != 0.0:
 			animated_sprite.play("run")
 		else:
 			animated_sprite.play("idle")
-		
+
 	move_and_slide()
 
 
 func _play_attack() -> void:
+	if attacking or hurt_animation_playing or attack_on_cooldown:
+		return
+
 	attacking = true
 	attack_on_cooldown = true
 	animated_sprite.play("hit")
+	_hit_enemy_with_sword()
+
 	var attack_duration: float = float(animated_sprite.sprite_frames.get_frame_count("hit")) \
 			/ animated_sprite.sprite_frames.get_animation_speed("hit")
 	await get_tree().create_timer(attack_duration).timeout
@@ -118,6 +136,55 @@ func _play_attack() -> void:
 	if remaining_cooldown > 0.0:
 		await get_tree().create_timer(remaining_cooldown).timeout
 	attack_on_cooldown = false
+
+
+func _hit_enemy_with_sword() -> void:
+	var target: Node2D = null
+	var closest_distance := SWORD_RANGE + 1.0
+
+	for enemy in get_tree().get_nodes_in_group("enemy"):
+		if not is_instance_valid(enemy) or not enemy is Node2D:
+			continue
+		var offset: Vector2 = enemy.global_position - global_position
+		var horizontal_distance := offset.x * facing_direction
+		if horizontal_distance < 0.0 or horizontal_distance > SWORD_RANGE:
+			continue
+		if absf(offset.y) > 48.0:
+			continue
+		if horizontal_distance < closest_distance:
+			closest_distance = horizontal_distance
+			target = enemy
+
+	if is_instance_valid(target) and target.has_method("take_weapon_damage"):
+		target.call("take_weapon_damage", SWORD_DAMAGE)
+
+
+func _shoot_rifle() -> void:
+	var from := global_position + Vector2(0.0, -8.0)
+	var to := from + Vector2(facing_direction * RIFLE_RANGE, 0.0)
+	var query := PhysicsRayQueryParameters2D.create(from, to)
+	query.exclude = [self]
+	var hit := get_world_2d().direct_space_state.intersect_ray(query)
+
+	var shot_end: Vector2 = to
+	if not hit.is_empty():
+		shot_end = hit["position"]
+		var target: Object = hit["collider"]
+		if target is Node and target.is_in_group("enemy") and target.has_method("take_weapon_damage"):
+			target.call("take_weapon_damage", RIFLE_DAMAGE)
+
+	_show_rifle_shot(from, shot_end)
+
+
+func _show_rifle_shot(from: Vector2, to: Vector2) -> void:
+	var shot_line := Line2D.new()
+	shot_line.width = 2.0
+	shot_line.default_color = Color(1.0, 0.85, 0.25, 1.0)
+	shot_line.points = PackedVector2Array([to_local(from), to_local(to)])
+	add_child(shot_line)
+	var tween := create_tween()
+	tween.tween_property(shot_line, "modulate:a", 0.0, 0.12)
+	tween.finished.connect(shot_line.queue_free)
 
 
 func _play_hurt() -> void:
@@ -129,13 +196,3 @@ func _play_hurt() -> void:
 			/ animated_sprite.sprite_frames.get_animation_speed("hurt")
 	await get_tree().create_timer(hurt_duration).timeout
 	hurt_animation_playing = false
-	
-	
-
-
-func _on_coin_body_entered(_body: Node2D) -> void:
-	pass # Replace with function body.
-
-
-func _on_coin_body_exited(_body: Node2D) -> void:
-	pass # Replace with function body.
