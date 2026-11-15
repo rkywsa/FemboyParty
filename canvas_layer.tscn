@@ -2,5 +2,9 @@
 
 [ext_resource type="Script" uid="uid://cuvu55t5mo6oi" path="res://canvas_layer.gd" id="1_v2lfg"]
 
+<<<<<<< Updated upstream
 [node name="CanvasLayer" type="CanvasLayer" unique_id=1915367380]
+=======
+[node name="CanvasLayer" type="CanvasLayer" unique_id=1393970124]
+>>>>>>> Stashed changes
 script = ExtResource("1_v2lfg")

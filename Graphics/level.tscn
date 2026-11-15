@@ -28,18 +28,32 @@ size = Vector2(6, 68.5)
 [node name="Level" type="Node2D" unique_id=661646850]
 script = ExtResource("1_md3ei")
 
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=630245241]
+tile_set = SubResource("TileSet_mti6b")
+
 [node name="Player" parent="." unique_id=1078703586 instance=ExtResource("1_gcbfm")]
 position = Vector2(16, 120)
 
+<<<<<<< Updated upstream
 [node name="CanvasLayer" parent="Player" unique_id=1915367380 instance=ExtResource("3_hncu4")]
+=======
+[node name="Pause" parent="Player" unique_id=1359264044 instance=ExtResource("5_l46ql")]
+offset_left = -16.0
+offset_top = -120.0
+offset_right = -16.0
+offset_bottom = -120.0
+>>>>>>> Stashed changes
 
 [node name="Enemy" parent="." unique_id=745031822 instance=ExtResource("8_enemy")]
 position = Vector2(571, 164)
 detection_range = 102.0
 
+<<<<<<< Updated upstream
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=630245241]
 tile_set = SubResource("TileSet_mti6b")
 
+=======
+>>>>>>> Stashed changes
 [node name="Pipes" type="Node2D" parent="." unique_id=137251326]
 
 [node name="Pipe" type="Sprite2D" parent="Pipes" unique_id=2087773064]
