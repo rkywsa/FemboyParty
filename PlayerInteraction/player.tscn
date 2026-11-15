@@ -140,6 +140,20 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_5rx5h")
+}],
+"loop": 1,
+"name": &"atack",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_puius")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ikkx5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5rx5h")
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_j0phw")
@@ -245,8 +259,8 @@ animations = [{
 "speed": 12.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_q3d3v"]
-size = Vector2(16, 17)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2jkg5"]
+size = Vector2(14, 20)
 
 [node name="Player" type="CharacterBody2D" unique_id=1078703586]
 position = Vector2(1, 0)
@@ -256,11 +270,11 @@ script = ExtResource("1_hstkp")
 position = Vector2(-1, -1)
 scale = Vector2(1.083, 1)
 sprite_frames = SubResource("SpriteFrames_4kxuq")
-animation = &"hit"
+animation = &"idle"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1151519414]
-position = Vector2(-2, 1.5)
-shape = SubResource("RectangleShape2D_q3d3v")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1161007918]
+position = Vector2(-1, 1)
+shape = SubResource("RectangleShape2D_2jkg5")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1449698762]
 zoom = Vector2(6, 6)
