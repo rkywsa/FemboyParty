@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
 signal health_changed(current_health: int, maximum_health: int)
+signal weapon_changed(weapon_name: String)
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var camera: Camera2D = $Camera2D
@@ -17,6 +18,8 @@ const SWORD_RANGE: float = 42.0
 const RIFLE_RANGE: float = 600.0
 const SWORD_DAMAGE: int = 3
 const RIFLE_DAMAGE: int = 2
+const KNOCKBACK_SPEED: float = 100.0
+const KNOCKBACK_DURATION: float = 0.1
 
 var intro_waiting := true
 var movement_enabled := false
@@ -26,6 +29,8 @@ var attack_on_cooldown := false
 var health: int
 var facing_direction: float = 1.0
 var current_weapon: String = "sword"
+var knockback_direction: float = 0.0
+var knockback_time: float = 0.0
 
 
 func _ready() -> void:
@@ -51,14 +56,12 @@ func _ready() -> void:
 	movement_enabled = true
 
 
-func _input(event: InputEvent) -> void:
+func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_1:
-			current_weapon = "sword"
-			print("Wybrano miecz (1). Atak: lewy przycisk myszy.")
+			select_weapon("sword")
 		elif event.keycode == KEY_2:
-			current_weapon = "rifle"
-			print("Wybrano karabin (2). Strzał: lewy przycisk myszy.")
+			select_weapon("rifle")
 
 	if event is InputEventMouseButton \
 			and event.button_index == MOUSE_BUTTON_LEFT \
@@ -71,10 +74,26 @@ func _input(event: InputEvent) -> void:
 			_shoot_rifle()
 
 
-func take_damage(amount: int) -> void:
+func select_weapon(weapon_name: String) -> void:
+	if weapon_name not in ["sword", "rifle"]:
+		push_warning("Unknown weapon selected: %s" % weapon_name)
+		return
+	if current_weapon == weapon_name:
+		return
+
+	current_weapon = weapon_name
+	weapon_changed.emit(current_weapon)
+
+
+func take_damage(amount: int, source_position: Vector2) -> void:
 	if not movement_enabled or amount <= 0 or health <= 0:
 		return
 
+	knockback_direction = signf(global_position.x - source_position.x)
+	if knockback_direction == 0.0:
+		knockback_direction = -facing_direction
+	knockback_time = KNOCKBACK_DURATION
+	velocity.y = -sqrt(4.0 * maxf(get_gravity().y, 0.0))
 	health = maxi(health - amount, 0)
 	_play_hurt()
 	health_changed.emit(health, max_health)
@@ -95,9 +114,14 @@ func _physics_process(delta: float) -> void:
 		direction = Input.get_axis("ui_left", "ui_right")
 
 	if direction != 0.0:
-		velocity.x = direction * SPEED
 		facing_direction = signf(direction)
 		animated_sprite.flip_h = direction < 0.0
+
+	if knockback_time > 0.0:
+		knockback_time = maxf(knockback_time - delta, 0.0)
+		velocity.x = knockback_direction * KNOCKBACK_SPEED
+	elif direction != 0.0:
+		velocity.x = direction * SPEED
 	else:
 		velocity.x = move_toward(velocity.x, 0.0, SPEED)
 
@@ -156,7 +180,7 @@ func _hit_enemy_with_sword() -> void:
 			target = enemy
 
 	if is_instance_valid(target) and target.has_method("take_weapon_damage"):
-		target.call("take_weapon_damage", SWORD_DAMAGE)
+		target.call("take_weapon_damage", SWORD_DAMAGE, global_position)
 
 
 func _shoot_rifle() -> void:
@@ -171,7 +195,7 @@ func _shoot_rifle() -> void:
 		shot_end = hit["position"]
 		var target: Object = hit["collider"]
 		if target is Node and target.is_in_group("enemy") and target.has_method("take_weapon_damage"):
-			target.call("take_weapon_damage", RIFLE_DAMAGE)
+			target.call("take_weapon_damage", RIFLE_DAMAGE, global_position)
 
 	_show_rifle_shot(from, shot_end)
 
