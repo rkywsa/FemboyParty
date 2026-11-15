@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://6mn14fnkpghg" path="res://GameInteraction/coin.tscn" id="3_x4jqn"]
 [ext_resource type="Texture2D" uid="uid://moyfgbpoghqa" path="res://assets/sprites/pipe_support.png" id="4_ruodb"]
 [ext_resource type="Texture2D" uid="uid://bbf11t8kthwt5" path="res://assets/sprites/industrial_background.webp" id="5_gkh8j"]
+[ext_resource type="PackedScene" uid="uid://dv872agtfv7yj" path="res://pause.tscn" id="5_l46ql"]
 [ext_resource type="AudioStream" uid="uid://pj24hvfhhxvo" path="res://assets/sounds/metalpipa.wav" id="7_3vbyo"]
 [ext_resource type="AudioStream" uid="uid://dwgs0nbd2nvjf" path="res://assets/sounds/backgroundmusic.wav" id="7_6wa3a"]
 [ext_resource type="PackedScene" uid="uid://dchs870l51j63" path="res://Enemy/enemy.tscn" id="8_enemy"]
@@ -34,6 +35,8 @@ speed = 100.0
 
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=630245241]
 tile_set = SubResource("TileSet_mti6b")
+
+[node name="Pause" parent="." unique_id=1359264044 instance=ExtResource("5_l46ql")]
 
 [node name="Pipes" type="Node2D" parent="." unique_id=137251326]
 

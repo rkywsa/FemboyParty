@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://dv872agtfv7yj"]
+
+[ext_resource type="Script" uid="uid://dy1pdh8kcu7o7" path="res://pausemenu.gd" id="1_45vjg"]
+
+[node name="Pause" type="Control" unique_id=1359264044]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_45vjg")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1453221126]
+layout_mode = 0
+offset_top = 70.0
+offset_right = 70.0
+offset_bottom = 70.0
+color = Color(0.05490196, 0.06666667, 0.10980392, 1)
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1453737306]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_top = 271.0
+offset_right = 1903.0
+offset_bottom = 1080.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=186639515]
+layout_mode = 2
+
+[node name="Restart" type="Button" parent="PanelContainer/VBoxContainer" unique_id=1499271940]
+layout_mode = 2
+text = "Resume"
+
+[node name="Resume" type="Button" parent="PanelContainer/VBoxContainer" unique_id=1341944402]
+layout_mode = 2
+text = "Resume"
+
+[node name="Quit" type="Button" parent="PanelContainer/VBoxContainer" unique_id=1638161719]
+layout_mode = 2
+text = "Quit"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=852657235]
+
+[connection signal="pressed" from="PanelContainer/VBoxContainer/Restart" to="." method="_on_restart_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/Resume" to="." method="_on_resume_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/Quit" to="." method="_on_quit_pressed"]
