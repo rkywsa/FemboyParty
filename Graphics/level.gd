@@ -150,5 +150,18 @@ func _on_player_health_changed(current_health: int, _maximum_health: int) -> voi
 	health_bar.value = current_health
 	if current_health <= 0 and not game_over.visible:
 		game_over.visible = true
+		game_over.mouse_filter = Control.MOUSE_FILTER_STOP
 		restart_button.grab_focus()
 		get_tree().paused = true
+
+
+func _on_restart_button_pressed() -> void:
+	get_tree().paused = false
+	var error := get_tree().reload_current_scene()
+	if error != OK:
+		push_error("Could not restart level: %s" % error)
+
+
+func _on_quit_button_pressed() -> void:
+	get_tree().paused = false
+	get_tree().quit()

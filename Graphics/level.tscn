@@ -12,6 +12,8 @@
 [ext_resource type="PackedScene" uid="uid://dchs870l51j63" path="res://Enemy/enemy.tscn" id="8_enemy"]
 [ext_resource type="Texture2D" uid="uid://bs03w2ckfai04" path="res://assets/sprites/pipe_support (1).png" id="8_lj35t"]
 [ext_resource type="PackedScene" uid="uid://i3dfn63uqla5" path="res://health_bar.tscn" id="9_health_bar"]
+[ext_resource type="PackedScene" uid="uid://b5ec7roimipxw" path="res://spikes.tscn" id="13_lj35t"]
+[ext_resource type="Script" uid="uid://cwqccux5gw42h" path="res://spikes.gd" id="14_pipe_hazard"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_gcbfm"]
 texture = ExtResource("2_gcbfm")
@@ -23,6 +25,9 @@ sources/0 = SubResource("TileSetAtlasSource_gcbfm")
 size = Vector2(34, 9)
 
 [sub_resource type="RectangleShape2D" id="SpawnPipeWallShape"]
+size = Vector2(6, 68.5)
+
+[sub_resource type="RectangleShape2D" id="PipeHazardWallShape"]
 size = Vector2(6, 68.5)
 
 [node name="Level" type="Node2D" unique_id=661646850]
@@ -879,6 +884,20 @@ position = Vector2(16, 117)
 position = Vector2(0, -25.25)
 shape = SubResource("SpawnPipeWallShape")
 
+[node name="Pipe86Deadly" type="Area2D" parent="SpawnPipe" unique_id=417622442]
+position = Vector2(8885, 381.00003)
+rotation = 1.5707964
+scale = Vector2(-0.047368463, 81.94046)
+script = ExtResource("14_pipe_hazard")
+
+[node name="LeftWallHazard" type="CollisionShape2D" parent="SpawnPipe/Pipe86Deadly" unique_id=1404843005]
+position = Vector2(-16, 91.5)
+shape = SubResource("PipeHazardWallShape")
+
+[node name="RightWallHazard" type="CollisionShape2D" parent="SpawnPipe/Pipe86Deadly" unique_id=298470785]
+position = Vector2(16, 91.75)
+shape = SubResource("PipeHazardWallShape")
+
 [node name="Coin5" parent="." unique_id=635060567 instance=ExtResource("3_x4jqn")]
 position = Vector2(515.395, 231)
 
@@ -1171,5 +1190,9 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "Quit"
 
+[node name="Spikes" parent="." unique_id=366043516 instance=ExtResource("13_lj35t")]
+position = Vector2(-83, 195)
+
+[connection signal="body_entered" from="SpawnPipe/Pipe86Deadly" to="SpawnPipe/Pipe86Deadly" method="_on_body_entered"]
 [connection signal="pressed" from="GameOverLayer/GameOver/CenterContainer/Menu/RestartButton" to="." method="_on_restart_button_pressed"]
 [connection signal="pressed" from="GameOverLayer/GameOver/CenterContainer/Menu/QuitButton" to="." method="_on_quit_button_pressed"]
