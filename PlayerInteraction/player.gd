@@ -62,29 +62,32 @@ func _ready() -> void:
 
 
 func _create_rifle_visual() -> void:
-	# Assemble a small pixel-style rifle from polygons so no extra image asset is needed.
+	# Small, axis-aligned color blocks keep the hand-built gun pixel-shaped.
 	rifle_visual = Node2D.new()
 	rifle_visual.name = "RifleVisual"
 	rifle_visual.visible = false
 	rifle_visual.z_index = 2
 	add_child(rifle_visual)
 
+	# Barrel, receiver, stock, grip, and pixel highlights; all dimensions are integers.
 	_add_rifle_part(PackedVector2Array([
-		Vector2(-12, -5), Vector2(-7, -8), Vector2(5, -8),
-		Vector2(9, -5), Vector2(8, 0), Vector2(-10, 0)
-	]), Color("#35323b"))
-	_add_rifle_part(PackedVector2Array([
-		Vector2(5, -6), Vector2(22, -6), Vector2(22, -3), Vector2(7, -3)
+		Vector2(4, -2), Vector2(14, -2), Vector2(14, 0), Vector2(4, 0)
 	]), Color("#77727a"))
 	_add_rifle_part(PackedVector2Array([
-		Vector2(-11, -5), Vector2(-17, -7), Vector2(-17, -3), Vector2(-10, -1)
+		Vector2(-4, -3), Vector2(6, -3), Vector2(6, 1), Vector2(-4, 1)
+	]), Color("#35323b"))
+	_add_rifle_part(PackedVector2Array([
+		Vector2(-7, -2), Vector2(-4, -2), Vector2(-4, 1), Vector2(-7, 1)
 	]), Color("#514c55"))
 	_add_rifle_part(PackedVector2Array([
-		Vector2(-2, -1), Vector2(3, -1), Vector2(1, 5), Vector2(-2, 5)
+		Vector2(0, 1), Vector2(3, 1), Vector2(2, 5), Vector2(0, 5)
 	]), Color("#514c55"))
 	_add_rifle_part(PackedVector2Array([
-		Vector2(8, -8), Vector2(12, -10), Vector2(15, -10), Vector2(15, -8)
-	]), Color("#8b858d"))
+		Vector2(3, -3), Vector2(6, -3), Vector2(6, -2), Vector2(3, -2)
+	]), Color("#aaa3ad"))
+	_add_rifle_part(PackedVector2Array([
+		Vector2(7, -1), Vector2(10, -1), Vector2(10, 0), Vector2(7, 0)
+	]), Color("#aaa3ad"))
 
 
 func _add_rifle_part(points: PackedVector2Array, part_color: Color) -> void:
@@ -191,7 +194,7 @@ func _physics_process(delta: float) -> void:
 		animated_sprite.flip_h = direction < 0.0
 
 	if current_weapon == "rifle":
-		rifle_visual.position = Vector2(8.0 * facing_direction, -7.0)
+		rifle_visual.position = Vector2(3.0 * facing_direction, 1.0)
 		rifle_visual.scale.x = facing_direction
 
 	if knockback_time > 0.0:
@@ -261,9 +264,10 @@ func _hit_enemy_with_sword() -> void:
 
 
 func _shoot_rifle() -> void:
-	var from := global_position + Vector2(0.0, 4.0)
-	var to := from + Vector2(facing_direction * RIFLE_RANGE, 0.0)
-	var query := PhysicsRayQueryParameters2D.create(from, to)
+	# Fire from the lowered gun's muzzle, so the yellow shot visibly exits its barrel.
+	var muzzle := global_position + Vector2(17.0 * facing_direction, 1.0)
+	var to := muzzle + Vector2(facing_direction * RIFLE_RANGE, 0.0)
+	var query := PhysicsRayQueryParameters2D.create(muzzle, to)
 	query.exclude = [self]
 	var hit := get_world_2d().direct_space_state.intersect_ray(query)
 
@@ -276,13 +280,14 @@ func _shoot_rifle() -> void:
 
 	if rifle_sound.stream != null:
 		rifle_sound.play()
-	_show_rifle_shot(from, shot_end)
+	_show_rifle_shot(muzzle, shot_end)
 
 
 func _show_rifle_shot(from: Vector2, to: Vector2) -> void:
 	var shot_line := Line2D.new()
-	shot_line.width = 2.0
-	shot_line.default_color = Color(1.0, 0.85, 0.25, 1.0)
+	shot_line.width = 1.0
+	shot_line.antialiased = false
+	shot_line.default_color = Color("#ffe52b")
 	shot_line.points = PackedVector2Array([to_local(from), to_local(to)])
 	add_child(shot_line)
 	var tween := create_tween()
