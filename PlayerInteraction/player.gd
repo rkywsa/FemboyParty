@@ -31,6 +31,7 @@ var facing_direction: float = 1.0
 var current_weapon: String = "sword"
 var knockback_direction: float = 0.0
 var knockback_time: float = 0.0
+var gamepad_jump_requested := false
 
 
 func _ready() -> void:
@@ -57,6 +58,16 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventJoypadButton and event.pressed:
+		match event.button_index:
+			JOY_BUTTON_A:
+				gamepad_jump_requested = true
+			JOY_BUTTON_RIGHT_SHOULDER:
+				select_weapon("rifle" if current_weapon == "sword" else "sword")
+			JOY_BUTTON_B:
+				_use_current_weapon()
+		return
+
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_1:
 			select_weapon("sword")
@@ -66,12 +77,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton \
 			and event.button_index == MOUSE_BUTTON_LEFT \
 			and event.pressed:
-		if not movement_enabled or intro_waiting:
-			return
-		if current_weapon == "sword":
-			_play_attack()
-		else:
-			_shoot_rifle()
+		_use_current_weapon()
 
 
 func select_weapon(weapon_name: String) -> void:
@@ -83,6 +89,15 @@ func select_weapon(weapon_name: String) -> void:
 
 	current_weapon = weapon_name
 	weapon_changed.emit(current_weapon)
+
+
+func _use_current_weapon() -> void:
+	if not movement_enabled or intro_waiting:
+		return
+	if current_weapon == "sword":
+		_play_attack()
+	else:
+		_shoot_rifle()
 
 
 func take_damage(amount: int, source_position: Vector2) -> void:
@@ -101,13 +116,15 @@ func take_damage(amount: int, source_position: Vector2) -> void:
 
 func _physics_process(delta: float) -> void:
 	if intro_waiting:
+		gamepad_jump_requested = false
 		return
 
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
-	if movement_enabled and Input.is_action_just_pressed("ui_accept") and is_on_floor():
+	if movement_enabled and (Input.is_action_just_pressed("ui_accept") or gamepad_jump_requested) and is_on_floor():
 		velocity.y = JUMP_VELOCITY
+	gamepad_jump_requested = false
 
 	var direction := 0.0
 	if movement_enabled:
