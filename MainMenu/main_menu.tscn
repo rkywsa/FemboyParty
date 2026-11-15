@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cakbfma68ujli" path="res://MainMenu/main_menu.gd" id="1_menu"]
 [ext_resource type="AudioStream" uid="uid://dqt7ucquebeag" path="res://assets/sounds/buttonclick.wav" id="2_3w4mj"]
+[ext_resource type="Texture2D" uid="uid://cucnml3p0goi" path="res://assets/sprites/newmenu.png" id="2_5de1l"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_normal"]
 bg_color = Color(0.42, 0.24, 0.82, 1)
@@ -26,14 +27,14 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_menu")
 
-[node name="Background" type="ColorRect" parent="." unique_id=1124201788]
+[node name="Background" type="TextureRect" parent="." unique_id=1885031612]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.055, 0.067, 0.11, 1)
+texture = ExtResource("2_5de1l")
 
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=974208350]
 layout_mode = 1
@@ -51,7 +52,7 @@ theme_override_constants/separation = 24
 layout_mode = 2
 theme_override_colors/font_color = Color(0.94, 0.92, 1, 1)
 theme_override_font_sizes/font_size = 48
-text = "FemboyParty"
+text = "Pipe Slayer"
 horizontal_alignment = 1
 
 [node name="StartButton" type="Button" parent="CenterContainer/MenuContent" unique_id=2082678363]
