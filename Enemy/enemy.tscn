@@ -35,6 +35,22 @@ region = Rect2(64, 0, 32, 32)
 atlas = ExtResource("2_px1sc")
 region = Rect2(96, 0, 32, 32)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_j1l6t"]
+atlas = ExtResource("2_px1sc")
+region = Rect2(0, 224, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s5rk4"]
+atlas = ExtResource("2_px1sc")
+region = Rect2(32, 224, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q40vv"]
+atlas = ExtResource("2_px1sc")
+region = Rect2(64, 224, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_psesu"]
+atlas = ExtResource("2_px1sc")
+region = Rect2(96, 224, 32, 32)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_glvfu"]
 atlas = ExtResource("2_px1sc")
 region = Rect2(0, 64, 32, 32)
@@ -137,6 +153,23 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_j1l6t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s5rk4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q40vv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_psesu")
+}],
+"loop": 1,
+"name": &"new_animation",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_glvfu")
 }, {
 "duration": 1.0,
@@ -199,8 +232,9 @@ script = ExtResource("1_enemy")
 position = Vector2(0, -1)
 scale = Vector2(1.083, 1)
 sprite_frames = SubResource("SpriteFrames_dvkd8")
-animation = &"hit"
-frame_progress = 0.5315667
+animation = &"new_animation"
+frame = 3
+frame_progress = 0.09202096
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1481503051]
 position = Vector2(0, 1.5)
