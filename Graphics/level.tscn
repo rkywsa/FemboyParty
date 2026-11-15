@@ -3,10 +3,9 @@
 [ext_resource type="PackedScene" uid="uid://bp7sg0q7nbx2u" path="res://PlayerInteraction/player.tscn" id="1_gcbfm"]
 [ext_resource type="Script" uid="uid://bgvvg21wah0ng" path="res://Graphics/level.gd" id="1_md3ei"]
 [ext_resource type="Texture2D" uid="uid://darh6n7n7cskf" path="res://assets/sprites/platforms1.png" id="2_gcbfm"]
+[ext_resource type="PackedScene" uid="uid://ddtwwqe0v3u1i" path="res://canvas_layer.tscn" id="3_hncu4"]
 [ext_resource type="PackedScene" uid="uid://6mn14fnkpghg" path="res://GameInteraction/coin.tscn" id="3_x4jqn"]
 [ext_resource type="Texture2D" uid="uid://moyfgbpoghqa" path="res://assets/sprites/pipe_support.png" id="4_ruodb"]
-[ext_resource type="Texture2D" uid="uid://bbf11t8kthwt5" path="res://assets/sprites/industrial_background.webp" id="5_gkh8j"]
-[ext_resource type="PackedScene" uid="uid://dv872agtfv7yj" path="res://pause.tscn" id="5_l46ql"]
 [ext_resource type="AudioStream" uid="uid://pj24hvfhhxvo" path="res://assets/sounds/metalpipa.wav" id="7_3vbyo"]
 [ext_resource type="AudioStream" uid="uid://dwgs0nbd2nvjf" path="res://assets/sounds/backgroundmusic.wav" id="7_6wa3a"]
 [ext_resource type="Texture2D" uid="uid://c5gvvvhy563wf" path="res://assets/sprites/industrial_background2.png" id="7_dvkd8"]
@@ -32,14 +31,14 @@ script = ExtResource("1_md3ei")
 [node name="Player" parent="." unique_id=1078703586 instance=ExtResource("1_gcbfm")]
 position = Vector2(16, 120)
 
+[node name="CanvasLayer" parent="Player" unique_id=1915367380 instance=ExtResource("3_hncu4")]
+
 [node name="Enemy" parent="." unique_id=745031822 instance=ExtResource("8_enemy")]
 position = Vector2(571, 164)
 detection_range = 102.0
 
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=630245241]
 tile_set = SubResource("TileSet_mti6b")
-
-[node name="Pause" parent="." unique_id=1359264044 instance=ExtResource("5_l46ql")]
 
 [node name="Pipes" type="Node2D" parent="." unique_id=137251326]
 
@@ -525,9 +524,9 @@ stream = ExtResource("7_3vbyo")
 stream = ExtResource("7_6wa3a")
 volume_db = -5.0
 
-[node name="HUD" type="CanvasLayer" parent="."]
+[node name="HUD" type="CanvasLayer" parent="." unique_id=936221973]
 
-[node name="HealthBar" type="TextureProgressBar" parent="HUD"]
+[node name="HealthBar" type="TextureProgressBar" parent="HUD" unique_id=953205089]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -535,11 +534,9 @@ offset_left = -244.0
 offset_top = 24.0
 offset_right = -24.0
 offset_bottom = 60.0
-texture_progress = ExtResource("9_health_fill")
-texture_over = ExtResource("10_health_frame")
-max_value = 100.0
 value = 100.0
-show_percentage = false
+texture_over = ExtResource("10_health_frame")
+texture_progress = ExtResource("9_health_fill")
 
 [connection signal="body_entered" from="Coin5" to="Coin5" method="_on_body_entered"]
 [connection signal="body_entered" from="Coin4" to="Coin4" method="_on_body_entered"]
