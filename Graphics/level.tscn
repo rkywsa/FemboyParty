@@ -37,7 +37,6 @@ position = Vector2(16, 120)
 
 [node name="Enemy" parent="." unique_id=745031822 instance=ExtResource("8_enemy")]
 position = Vector2(571, 164)
-detection_range = 50.0
 
 [node name="Pipes" type="Node2D" parent="." unique_id=137251326]
 
@@ -545,10 +544,10 @@ offset_top = 16.0
 offset_right = -16.0
 offset_bottom = 156.0
 
-[node name="GameOverLayer" type="CanvasLayer" parent="."]
+[node name="GameOverLayer" type="CanvasLayer" parent="." unique_id=1013662825]
 layer = 20
 
-[node name="GameOver" type="Control" parent="GameOverLayer"]
+[node name="GameOver" type="Control" parent="GameOverLayer" unique_id=192726965]
 process_mode = 3
 visible = false
 layout_mode = 3
@@ -558,7 +557,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Dimmer" type="ColorRect" parent="GameOverLayer/GameOver"]
+[node name="Dimmer" type="ColorRect" parent="GameOverLayer/GameOver" unique_id=1403705913]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -567,7 +566,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.75)
 
-[node name="CenterContainer" type="CenterContainer" parent="GameOverLayer/GameOver"]
+[node name="CenterContainer" type="CenterContainer" parent="GameOverLayer/GameOver" unique_id=1679526020]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -575,24 +574,24 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Menu" type="VBoxContainer" parent="GameOverLayer/GameOver/CenterContainer"]
+[node name="Menu" type="VBoxContainer" parent="GameOverLayer/GameOver/CenterContainer" unique_id=867412421]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Title" type="Label" parent="GameOverLayer/GameOver/CenterContainer/Menu"]
+[node name="Title" type="Label" parent="GameOverLayer/GameOver/CenterContainer/Menu" unique_id=631682581]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 64
 text = "GAME OVER"
 horizontal_alignment = 1
 
-[node name="RestartButton" type="Button" parent="GameOverLayer/GameOver/CenterContainer/Menu"]
+[node name="RestartButton" type="Button" parent="GameOverLayer/GameOver/CenterContainer/Menu" unique_id=2070303009]
 custom_minimum_size = Vector2(260, 64)
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "Restart"
 
-[node name="QuitButton" type="Button" parent="GameOverLayer/GameOver/CenterContainer/Menu"]
+[node name="QuitButton" type="Button" parent="GameOverLayer/GameOver/CenterContainer/Menu" unique_id=2001328723]
 custom_minimum_size = Vector2(260, 64)
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
@@ -600,11 +599,3 @@ text = "Quit"
 
 [connection signal="pressed" from="GameOverLayer/GameOver/CenterContainer/Menu/RestartButton" to="." method="_on_restart_button_pressed"]
 [connection signal="pressed" from="GameOverLayer/GameOver/CenterContainer/Menu/QuitButton" to="." method="_on_quit_button_pressed"]
-[connection signal="body_entered" from="Coin5" to="Coin5" method="_on_body_entered"]
-[connection signal="body_entered" from="Coin4" to="Coin4" method="_on_body_entered"]
-[connection signal="body_entered" from="Coin3" to="Coin3" method="_on_body_entered"]
-[connection signal="body_entered" from="Coin2" to="Coin2" method="_on_body_entered"]
-[connection signal="body_entered" from="Coin6" to="Coin6" method="_on_body_entered"]
-[connection signal="body_entered" from="Coin7" to="Coin7" method="_on_body_entered"]
-[connection signal="body_entered" from="Coin8" to="Coin8" method="_on_body_entered"]
-[connection signal="body_entered" from="Coin" to="Coin" method="_on_body_entered"]

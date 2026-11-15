@@ -1,5 +1,6 @@
 extends Node2D
 
+
 @onready var backgroundmusic: AudioStreamPlayer2D = $backgroundmusic
 @onready var pipebye: AudioStreamPlayer2D = $pipebye
 @onready var health_bar: TextureProgressBar = $HUD/HealthBar
@@ -36,13 +37,29 @@ func _on_player_health_changed(current_health: int, _maximum_health: int) -> voi
 		restart_button.grab_focus()
 		get_tree().paused = true
 
-
-func _on_restart_button_pressed() -> void:
-	get_tree().paused = false
-	var error := get_tree().reload_current_scene()
-	if error != OK:
-		push_error("Could not restart level: %s" % error)
+@onready var coinsound: AudioStreamPlayer2D = $CoinSound
 
 
-func _on_quit_button_pressed() -> void:
-	get_tree().quit()
+func _readyy():
+	$AnimatedSprite2D.play("coin")
+
+
+func _on_body_entered(body: Node2D) -> void:
+	if not body.is_in_group("player"):
+		return
+
+
+	# Dodaj monetę do licznika w skrypcie poziomu.
+	var level := get_tree().current_scene
+	if level != null and level.has_method("add_coin"):
+		level.add_coin()
+	else:
+		push_warning("Nie znaleziono metody add_coin() w aktualnym poziomie.")
+
+	set_deferred("monitoring", false)
+
+	coinsound.reparent(get_tree().current_scene)
+	coinsound.finished.connect(coinsound.queue_free)
+	coinsound.play()
+
+	queue_free()
