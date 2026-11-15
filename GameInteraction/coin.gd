@@ -3,6 +3,10 @@ extends Area2D
 @onready var coinsound = $CoinSound
 
 
+func _ready() -> void:
+	$AnimatedSprite2D.play("coin")
+
+
 func _on_body_entered(body: Node2D) -> void:
 	if body.name != "Player":
 		return

@@ -13,6 +13,7 @@ var movement_enabled := false
 
 
 func _ready() -> void:
+	add_to_group("player")
 	z_index = -1
 	animated_sprite.play("jump")
 
