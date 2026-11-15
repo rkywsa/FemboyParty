@@ -1,9 +1,14 @@
 extends CharacterBody2D
 
+signal health_changed(current_health: int, maximum_health: int)
+
 @onready var animated_sprite = $AnimatedSprite2D
 @onready var camera: Camera2D = $Camera2D
 @onready var playermusic = $PlayerAudio
-const SPEED = 300.0
+
+@export var max_health: int = 100
+
+const SPEED = 100.0
 const JUMP_VELOCITY = -300.0
 const INTRO_ZOOM_MULTIPLIER = 3.0
 const INTRO_ZOOM_DURATION = 2.0
@@ -13,10 +18,12 @@ var intro_waiting := true
 var movement_enabled := false
 var attacking := false
 var attack_on_cooldown := false
+var health: int
 
 
 func _ready() -> void:
 	add_to_group("player")
+	health = max_health
 	z_index = -1
 	animated_sprite.play("jump")
 
@@ -35,6 +42,14 @@ func _ready() -> void:
 
 	z_index = 1
 	movement_enabled = true
+
+
+func take_damage(amount: int) -> void:
+	if not movement_enabled or amount <= 0 or health <= 0:
+		return
+
+	health = maxi(health - amount, 0)
+	health_changed.emit(health, max_health)
 
 
 func _physics_process(delta: float) -> void:
