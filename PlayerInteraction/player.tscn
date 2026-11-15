@@ -21,6 +21,22 @@ region = Rect2(64, 0, 32, 32)
 atlas = ExtResource("2_yebv0")
 region = Rect2(96, 0, 32, 32)
 
+[sub_resource type="AtlasTexture" id="HurtFrame1"]
+atlas = ExtResource("2_q3d3v")
+region = Rect2(0, 192, 32, 32)
+
+[sub_resource type="AtlasTexture" id="HurtFrame2"]
+atlas = ExtResource("2_q3d3v")
+region = Rect2(32, 192, 32, 32)
+
+[sub_resource type="AtlasTexture" id="HurtFrame3"]
+atlas = ExtResource("2_q3d3v")
+region = Rect2(64, 192, 32, 32)
+
+[sub_resource type="AtlasTexture" id="HurtFrame4"]
+atlas = ExtResource("2_q3d3v")
+region = Rect2(96, 192, 32, 32)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_pc0yj"]
 atlas = ExtResource("2_q3d3v")
 region = Rect2(0, 0, 32, 32)
@@ -161,6 +177,23 @@ animations = [{
 "loop": 0,
 "name": &"hit",
 "speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("HurtFrame1")
+}, {
+"duration": 1.0,
+"texture": SubResource("HurtFrame2")
+}, {
+"duration": 1.0,
+"texture": SubResource("HurtFrame3")
+}, {
+"duration": 1.0,
+"texture": SubResource("HurtFrame4")
+}],
+"loop": 0,
+"name": &"hurt",
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,

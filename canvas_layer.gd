@@ -5,10 +5,15 @@ var panel: PanelContainer
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+
+	layer = 10
+
 	build_menu()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel") and not event.is_echo():
+		if get_tree().paused and not overlay.visible:
+			return
 		toggle_pause()
 		get_viewport().set_input_as_handled()
 
@@ -33,9 +38,7 @@ func build_menu() -> void:
 	overlay.add_child(center)
 
 	panel = PanelContainer.new()
-	panel.custom_minimum_size = Vector2(-1000,-100)
-	panel.scale = Vector2(-10,-10)
-	panel.pivot_offset = panel.custom_minimum_size / 2
+	panel.custom_minimum_size = Vector2(340, 220)
 	panel.visible = false
 	center.add_child(panel)
 
