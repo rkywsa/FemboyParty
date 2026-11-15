@@ -7,9 +7,12 @@ const SPEED = 300.0
 const JUMP_VELOCITY = -300.0
 const INTRO_ZOOM_MULTIPLIER = 3.0
 const INTRO_ZOOM_DURATION = 2.0
+const ATTACK_COOLDOWN = 0.3
 
 var intro_waiting := true
 var movement_enabled := false
+var attacking := false
+var attack_on_cooldown := false
 
 
 func _ready() -> void:
@@ -44,7 +47,10 @@ func _physics_process(delta: float) -> void:
 
 	if movement_enabled and Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
-		
+
+	if movement_enabled and Input.is_action_just_pressed("player_attack") \
+			and not attacking and not attack_on_cooldown:
+		_play_attack()
 
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
@@ -71,15 +77,26 @@ func _physics_process(delta: float) -> void:
 		playermusic.stop()
 
 		
-	if not is_on_floor():
-		if animated_sprite.animation != "jump":
-			animated_sprite.play("jump")
-	elif direction != 0:
-		animated_sprite.play("run")
-	else:
-		animated_sprite.play("idle")
+	if not attacking:
+		if not is_on_floor():
+			if animated_sprite.animation != "jump":
+				animated_sprite.play("jump")
+		elif direction != 0:
+			animated_sprite.play("run")
+		else:
+			animated_sprite.play("idle")
 		
 	move_and_slide()
+
+
+func _play_attack() -> void:
+	attacking = true
+	attack_on_cooldown = true
+	animated_sprite.play("hit")
+	await animated_sprite.animation_finished
+	attacking = false
+	await get_tree().create_timer(ATTACK_COOLDOWN).timeout
+	attack_on_cooldown = false
 	
 	
 
