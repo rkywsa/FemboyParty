@@ -29,16 +29,8 @@ script = ExtResource("1_md3ei")
 position = Vector2(16, 120)
 
 [node name="Enemy" parent="." unique_id=745031822 instance=ExtResource("8_enemy")]
-position = Vector2(219, 186)
-
-[node name="Enemy2" parent="." unique_id=949064387 instance=ExtResource("8_enemy")]
-position = Vector2(-173, 183)
-
-[node name="Enemy3" parent="." unique_id=76421545 instance=ExtResource("8_enemy")]
-position = Vector2(107, 189)
-
-[node name="Enemy4" parent="." unique_id=1017769591 instance=ExtResource("8_enemy")]
-position = Vector2(321, 189)
+position = Vector2(359, 182)
+speed = 200.095
 
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=630245241]
 tile_set = SubResource("TileSet_mti6b")
