@@ -4,8 +4,11 @@
 [ext_resource type="Texture2D" uid="uid://ciu86wqqtpaq7" path="res://assets/sprites/health_fill.png" id="2_srckl"]
 
 [node name="HealthBar" type="TextureProgressBar" unique_id=311365593]
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 19.0
+offset_top = 1.0
+offset_right = 467.0
+offset_bottom = 97.0
+scale = Vector2(9.907801, 9.944445)
 value = 100.0
 texture_over = ExtResource("1_kdjhy")
 texture_progress = ExtResource("2_srckl")

@@ -10,8 +10,7 @@
 [ext_resource type="AudioStream" uid="uid://dwgs0nbd2nvjf" path="res://assets/sounds/backgroundmusic.wav" id="7_6wa3a"]
 [ext_resource type="Texture2D" uid="uid://c5gvvvhy563wf" path="res://assets/sprites/industrial_background2.png" id="7_dvkd8"]
 [ext_resource type="PackedScene" uid="uid://dchs870l51j63" path="res://Enemy/enemy.tscn" id="8_enemy"]
-[ext_resource type="Texture2D" uid="uid://ciu86wqqtpaq7" path="res://assets/sprites/health_fill.png" id="9_health_fill"]
-[ext_resource type="Texture2D" uid="uid://bxr00807ktvlm" path="res://assets/sprites/health_frame.png" id="10_health_frame"]
+[ext_resource type="PackedScene" uid="uid://i3dfn63uqla5" path="res://health_bar.tscn" id="9_health_bar"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_gcbfm"]
 texture = ExtResource("2_gcbfm")
@@ -34,26 +33,12 @@ tile_set = SubResource("TileSet_mti6b")
 [node name="Player" parent="." unique_id=1078703586 instance=ExtResource("1_gcbfm")]
 position = Vector2(16, 120)
 
-<<<<<<< Updated upstream
 [node name="CanvasLayer" parent="Player" unique_id=1915367380 instance=ExtResource("3_hncu4")]
-=======
-[node name="Pause" parent="Player" unique_id=1359264044 instance=ExtResource("5_l46ql")]
-offset_left = -16.0
-offset_top = -120.0
-offset_right = -16.0
-offset_bottom = -120.0
->>>>>>> Stashed changes
 
 [node name="Enemy" parent="." unique_id=745031822 instance=ExtResource("8_enemy")]
 position = Vector2(571, 164)
-detection_range = 102.0
+detection_range = 50.0
 
-<<<<<<< Updated upstream
-[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=630245241]
-tile_set = SubResource("TileSet_mti6b")
-
-=======
->>>>>>> Stashed changes
 [node name="Pipes" type="Node2D" parent="." unique_id=137251326]
 
 [node name="Pipe" type="Sprite2D" parent="Pipes" unique_id=2087773064]
@@ -538,39 +523,19 @@ stream = ExtResource("7_3vbyo")
 stream = ExtResource("7_6wa3a")
 volume_db = -5.0
 
-<<<<<<< Updated upstream
-[node name="HUD" type="CanvasLayer" parent="." unique_id=936221973]
-
-[node name="HealthBar" type="TextureProgressBar" parent="HUD" unique_id=953205089]
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -244.0
-offset_top = 24.0
-offset_right = -24.0
-offset_bottom = 60.0
-=======
 [node name="HUD" type="CanvasLayer" parent="." unique_id=689252091]
-follow_viewport_scale = 0.001
 
-[node name="HealthBar" type="TextureProgressBar" parent="HUD" unique_id=153319981]
+[node name="HealthBar" parent="HUD" unique_id=153319981 instance=ExtResource("9_health_bar")]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = 1049.0
-offset_top = 26.0
-offset_right = 1113.0
-offset_bottom = 38.0
-grow_horizontal = 0
-scale = Vector2(8.27, 8.27)
-pivot_offset = Vector2(220, 0)
->>>>>>> Stashed changes
-value = 100.0
-texture_over = ExtResource("10_health_frame")
-texture_progress = ExtResource("9_health_fill")
+offset_left = -664.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 156.0
 
 [node name="GameOverLayer" type="CanvasLayer" parent="."]
-layer = 10
+layer = 20
 
 [node name="GameOver" type="Control" parent="GameOverLayer"]
 process_mode = 3

@@ -12,7 +12,7 @@ const SPEED = 100.0
 const JUMP_VELOCITY = -300.0
 const INTRO_ZOOM_MULTIPLIER = 3.0
 const INTRO_ZOOM_DURATION = 2.0
-const ATTACK_COOLDOWN = 0.3
+const ATTACK_COOLDOWN = 1.0
 
 var intro_waiting := true
 var movement_enabled := false
@@ -114,7 +114,9 @@ func _play_attack() -> void:
 			/ animated_sprite.sprite_frames.get_animation_speed("hit")
 	await get_tree().create_timer(attack_duration).timeout
 	attacking = false
-	await get_tree().create_timer(ATTACK_COOLDOWN).timeout
+	var remaining_cooldown := maxf(ATTACK_COOLDOWN - attack_duration, 0.0)
+	if remaining_cooldown > 0.0:
+		await get_tree().create_timer(remaining_cooldown).timeout
 	attack_on_cooldown = false
 
 
