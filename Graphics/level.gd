@@ -6,6 +6,7 @@ extends Node2D
 @onready var player: CharacterBody2D = $Player
 @onready var game_over: Control = $GameOverLayer/GameOver
 @onready var restart_button: Button = $GameOverLayer/GameOver/CenterContainer/Menu/RestartButton
+@onready var back_to_menu_button: Button = $GameOverLayer/GameOver/CenterContainer/Menu/BackToMenuButton
 @onready var quit_button: Button = $GameOverLayer/GameOver/CenterContainer/Menu/QuitButton
 @onready var game_over_title: Label = $GameOverLayer/GameOver/CenterContainer/Menu/Title
 @onready var coin_label: Label = $HUD/CoinsLabel
@@ -38,7 +39,7 @@ func _ready() -> void:
 	player.arrow_ammo_changed.connect(_on_player_arrow_ammo_changed)
 	_on_player_weapon_changed(player.current_weapon)
 	_on_player_arrow_ammo_changed(player.arrow_ammo, player.MAX_ARROW_AMMO)
-	menu_buttons = [restart_button, quit_button]
+	menu_buttons = [restart_button, back_to_menu_button, quit_button]
 	backgroundmusic.play()
 	await get_tree().create_timer(2.38).timeout
 	if is_instance_valid(pipebye):
@@ -276,6 +277,13 @@ func _on_restart_button_pressed() -> void:
 	var error := get_tree().reload_current_scene()
 	if error != OK:
 		push_error("Could not restart level: %s" % error)
+
+
+func _on_back_to_menu_button_pressed() -> void:
+	get_tree().paused = false
+	var error := get_tree().change_scene_to_file("res://MainMenu/main_menu.tscn")
+	if error != OK:
+		push_error("Could not load main menu: %s" % error)
 
 
 func _on_quit_button_pressed() -> void:
