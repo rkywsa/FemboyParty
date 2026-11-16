@@ -30,6 +30,16 @@ size = Vector2(6, 68.5)
 [sub_resource type="RectangleShape2D" id="PipeHazardWallShape"]
 size = Vector2(6, 68.5)
 
+[sub_resource type="Gradient" id="SupportFogGradient"]
+offsets = PackedFloat32Array(0, 0.45, 1)
+colors = PackedColorArray(0.22, 0.27, 0.22, 0.42, 0.22, 0.27, 0.22, 0.18, 0.22, 0.27, 0.22, 0)
+
+[sub_resource type="GradientTexture2D" id="SupportFogTexture"]
+gradient = SubResource("SupportFogGradient")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
 [node name="Level" type="Node2D" unique_id=661646850]
 script = ExtResource("1_md3ei")
 
@@ -959,6 +969,7 @@ position = Vector2(1586.9246, 126)
 position = Vector2(55, 190)
 
 [node name="Foreground" type="Node2D" parent="." unique_id=243273431]
+modulate = Color(0.66, 0.72, 0.64, 0.82)
 z_index = -1
 position = Vector2(0, 251)
 
@@ -1083,6 +1094,76 @@ scale = Vector2(2, 2)
 texture = ExtResource("8_lj35t")
 flip_v = true
 
+[node name="BackgroundFog" type="Node2D" parent="." unique_id=672452897]
+z_index = -10
+position = Vector2(0, 251)
+
+[node name="SupportFog1" type="Sprite2D" parent="BackgroundFog" unique_id=832070712]
+z_index = 1
+position = Vector2(-80, -105)
+scale = Vector2(14.5, 8.5)
+texture = SubResource("SupportFogTexture")
+
+[node name="SupportFog2" type="Sprite2D" parent="BackgroundFog" unique_id=1814816116]
+z_index = 1
+position = Vector2(200, -40)
+scale = Vector2(13.5, 8.5)
+texture = SubResource("SupportFogTexture")
+
+[node name="SupportFog3" type="Sprite2D" parent="BackgroundFog" unique_id=1202242927]
+z_index = 1
+position = Vector2(480, -160)
+scale = Vector2(14.5, 9)
+texture = SubResource("SupportFogTexture")
+
+[node name="SupportFog4" type="Sprite2D" parent="BackgroundFog" unique_id=828762164]
+z_index = 1
+position = Vector2(760, -80)
+scale = Vector2(13.5, 8.5)
+texture = SubResource("SupportFogTexture")
+
+[node name="SupportFog5" type="Sprite2D" parent="BackgroundFog" unique_id=1009749439]
+z_index = 1
+position = Vector2(1040, -180)
+scale = Vector2(14.5, 9)
+texture = SubResource("SupportFogTexture")
+
+[node name="SupportFog6" type="Sprite2D" parent="BackgroundFog" unique_id=1350663936]
+z_index = 1
+position = Vector2(1320, -70)
+scale = Vector2(13.5, 8.5)
+texture = SubResource("SupportFogTexture")
+
+[node name="SupportFog7" type="Sprite2D" parent="BackgroundFog" unique_id=720999945]
+z_index = 1
+position = Vector2(1600, -160)
+scale = Vector2(14.5, 9)
+texture = SubResource("SupportFogTexture")
+
+[node name="SupportFog8" type="Sprite2D" parent="BackgroundFog" unique_id=1718757005]
+z_index = 1
+position = Vector2(1880, -50)
+scale = Vector2(13.5, 8.5)
+texture = SubResource("SupportFogTexture")
+
+[node name="SupportFog9" type="Sprite2D" parent="BackgroundFog" unique_id=1378495046]
+z_index = 1
+position = Vector2(2160, -150)
+scale = Vector2(14.5, 9)
+texture = SubResource("SupportFogTexture")
+
+[node name="SupportFog10" type="Sprite2D" parent="BackgroundFog" unique_id=1347613781]
+z_index = 1
+position = Vector2(2440, -70)
+scale = Vector2(13.5, 8.5)
+texture = SubResource("SupportFogTexture")
+
+[node name="SupportFog11" type="Sprite2D" parent="BackgroundFog" unique_id=272413536]
+z_index = 1
+position = Vector2(2720, -120)
+scale = Vector2(14.5, 8.5)
+texture = SubResource("SupportFogTexture")
+
 [node name="Background" type="Sprite2D" parent="." unique_id=82045364]
 z_index = -10
 position = Vector2(-15, 191)
@@ -1109,6 +1190,7 @@ texture = ExtResource("7_dvkd8")
 
 [node name="pipebye" type="AudioStreamPlayer2D" parent="." unique_id=747031822]
 stream = ExtResource("7_3vbyo")
+volume_db = 24.0
 
 [node name="backgroundmusic" type="AudioStreamPlayer2D" parent="." unique_id=1916325877]
 stream = ExtResource("7_6wa3a")
@@ -1131,11 +1213,12 @@ text = "Coins: 0"
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -664.0
-offset_top = 16.0
-offset_right = -16.0
-offset_bottom = 156.0
+offset_left = -551.0
+offset_top = 6.0
+offset_right = -487.0
+offset_bottom = 18.0
 grow_horizontal = 0
+scale = Vector2(8.508, 8.544)
 
 [node name="GameOverLayer" type="CanvasLayer" parent="." unique_id=1013662825]
 layer = 20

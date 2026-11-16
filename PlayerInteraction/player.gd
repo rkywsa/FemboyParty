@@ -20,7 +20,8 @@ const ATTACK_COOLDOWN: float = 1.0
 const BOW_COOLDOWN: float = 0.3
 const MAX_ARROW_AMMO: int = 6
 const AMMO_PER_KILL: int = 2
-const SWORD_RANGE: float = 42.0
+const SWORD_RANGE: float = 20.0
+const SWORD_VERTICAL_RANGE: float = 16.0
 const SWORD_DAMAGE: int = 3
 const ARROW_DAMAGE: int = 2
 const KNOCKBACK_SPEED: float = 100.0
@@ -41,6 +42,9 @@ var knockback_time: float = 0.0
 var gamepad_jump_requested := false
 var bow_visual: Node2D
 var bow_sound: AudioStreamPlayer2D
+var sword_hitbox_indicator: Polygon2D
+var sword_hit_pending := false
+var sword_attack_direction := 1.0
 
 
 func _ready() -> void:
@@ -50,6 +54,7 @@ func _ready() -> void:
 	animated_sprite.play("jump")
 	_create_bow_visual()
 	_create_bow_sound()
+	_create_sword_hitbox_indicator()
 
 	var normal_zoom := camera.zoom
 	camera.zoom = normal_zoom * INTRO_ZOOM_MULTIPLIER
@@ -96,6 +101,35 @@ func _create_bow_sound() -> void:
 	bow_sound.stream = load("res://assets/sounds/tap.wav") as AudioStream
 	bow_sound.volume_db = -4.0
 	add_child(bow_sound)
+
+
+func _create_sword_hitbox_indicator() -> void:
+	var hitbox_points := PackedVector2Array([
+		Vector2(0.0, -SWORD_VERTICAL_RANGE),
+		Vector2(SWORD_RANGE, -SWORD_VERTICAL_RANGE),
+		Vector2(SWORD_RANGE, SWORD_VERTICAL_RANGE),
+		Vector2(0.0, SWORD_VERTICAL_RANGE)
+	])
+	sword_hitbox_indicator = Polygon2D.new()
+	sword_hitbox_indicator.name = "SwordHitboxIndicator"
+	sword_hitbox_indicator.polygon = hitbox_points
+	sword_hitbox_indicator.color = Color(1.0, 0.18, 0.1, 0.1)
+	sword_hitbox_indicator.visible = false
+	sword_hitbox_indicator.z_index = -1
+	add_child(sword_hitbox_indicator)
+
+	var outline := Line2D.new()
+	outline.width = 1.0
+	outline.default_color = Color(1.0, 0.35, 0.2, 0.5)
+	outline.antialiased = false
+	outline.points = PackedVector2Array([
+		hitbox_points[0],
+		hitbox_points[1],
+		hitbox_points[2],
+		hitbox_points[3],
+		hitbox_points[0]
+	])
+	sword_hitbox_indicator.add_child(outline)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -206,7 +240,7 @@ func _physics_process(delta: float) -> void:
 		direction = Input.get_axis("ui_left", "ui_right")
 
 	if direction != 0.0:
-		facing_direction = signf(direction)
+		facing_direction = signf(direction) 
 		animated_sprite.flip_h = direction < 0.0
 
 	if current_weapon == "bow":
@@ -237,6 +271,10 @@ func _physics_process(delta: float) -> void:
 			animated_sprite.play("idle")
 
 	move_and_slide()
+	if sword_hit_pending:
+		sword_hit_pending = false
+		if attacking and not hurt_animation_playing:
+			_hit_enemy_with_sword()
 
 
 func _play_attack() -> void:
@@ -246,12 +284,16 @@ func _play_attack() -> void:
 	attacking = true
 	attack_on_cooldown = true
 	animated_sprite.play("hit")
-	_hit_enemy_with_sword()
+	sword_attack_direction = facing_direction
+	sword_hitbox_indicator.scale.x = sword_attack_direction
+	sword_hitbox_indicator.visible = true
+	sword_hit_pending = true
 
 	var attack_duration: float = float(animated_sprite.sprite_frames.get_frame_count("hit")) \
 			/ animated_sprite.sprite_frames.get_animation_speed("hit")
 	await get_tree().create_timer(attack_duration).timeout
 	attacking = false
+	sword_hitbox_indicator.visible = false
 	var remaining_cooldown := maxf(ATTACK_COOLDOWN - attack_duration, 0.0)
 	if remaining_cooldown > 0.0:
 		await get_tree().create_timer(remaining_cooldown).timeout
@@ -260,22 +302,34 @@ func _play_attack() -> void:
 
 func _hit_enemy_with_sword() -> void:
 	var target: Node2D = null
-	var closest_distance := SWORD_RANGE + 1.0
+	var closest_distance := INF
+	var hitbox_shape := RectangleShape2D.new()
+	hitbox_shape.size = Vector2(SWORD_RANGE, SWORD_VERTICAL_RANGE * 2.0)
 
-	for enemy in get_tree().get_nodes_in_group("enemy"):
-		if not is_instance_valid(enemy) or not enemy is Node2D:
+	var query := PhysicsShapeQueryParameters2D.new()
+	query.shape = hitbox_shape
+	query.transform = Transform2D(
+		0.0,
+		global_position + Vector2(sword_attack_direction * SWORD_RANGE * 0.5, 0.0)
+	)
+	query.collision_mask = 0xFFFFFFFF
+	query.exclude = [get_rid()]
+	query.collide_with_bodies = true
+	query.collide_with_areas = false
+
+	var space_state := get_world_2d().direct_space_state
+	for result in space_state.intersect_shape(query, 64):
+		var enemy := result.get("collider") as Node2D
+		if not is_instance_valid(enemy) or not enemy.is_in_group("enemy"):
 			continue
-		var offset: Vector2 = enemy.global_position - global_position
-		var horizontal_distance := offset.x * facing_direction
-		if horizontal_distance < 0.0 or horizontal_distance > SWORD_RANGE:
+		if not enemy.has_method("take_weapon_damage"):
 			continue
-		if absf(offset.y) > 48.0:
-			continue
+		var horizontal_distance := absf(enemy.global_position.x - global_position.x)
 		if horizontal_distance < closest_distance:
 			closest_distance = horizontal_distance
 			target = enemy
 
-	if is_instance_valid(target) and target.has_method("take_weapon_damage"):
+	if is_instance_valid(target):
 		damage_enemy(target, SWORD_DAMAGE)
 
 
@@ -309,6 +363,8 @@ func _shoot_bow() -> void:
 func _play_hurt() -> void:
 	if attacking:
 		attacking = false
+		sword_hit_pending = false
+		sword_hitbox_indicator.visible = false
 	hurt_animation_playing = true
 	animated_sprite.play("hurt")
 	var hurt_duration: float = float(animated_sprite.sprite_frames.get_frame_count("hurt")) \
