@@ -6,7 +6,6 @@ extends Node2D
 @onready var player: CharacterBody2D = $Player
 @onready var game_over: Control = $GameOverLayer/GameOver
 @onready var restart_button: Button = $GameOverLayer/GameOver/CenterContainer/Menu/RestartButton
-@onready var back_to_menu_button: Button = $GameOverLayer/GameOver/CenterContainer/Menu/BackToMenuButton
 @onready var quit_button: Button = $GameOverLayer/GameOver/CenterContainer/Menu/QuitButton
 @onready var game_over_title: Label = $GameOverLayer/GameOver/CenterContainer/Menu/Title
 @onready var coin_label: Label = $HUD/CoinsLabel
@@ -22,6 +21,7 @@ var end_reached := false
 var menu_buttons: Array[Button] = []
 var menu_focus_index := 0
 var menu_axis_latched := false
+var back_to_menu_button: Button
 
 
 func _ready() -> void:
@@ -39,6 +39,7 @@ func _ready() -> void:
 	player.arrow_ammo_changed.connect(_on_player_arrow_ammo_changed)
 	_on_player_weapon_changed(player.current_weapon)
 	_on_player_arrow_ammo_changed(player.arrow_ammo, player.MAX_ARROW_AMMO)
+	_ensure_back_to_menu_button()
 	menu_buttons = [restart_button, back_to_menu_button, quit_button]
 	backgroundmusic.play()
 	await get_tree().create_timer(2.38).timeout
@@ -87,6 +88,27 @@ func _move_game_over_focus(direction: int) -> void:
 		return
 	menu_focus_index = posmod(menu_focus_index + direction, menu_buttons.size())
 	menu_buttons[menu_focus_index].grab_focus()
+
+
+func _ensure_back_to_menu_button() -> void:
+	var menu_container: VBoxContainer = $GameOverLayer/GameOver/CenterContainer/Menu
+	if menu_container == null:
+		return
+
+	if menu_container.has_node("BackToMenuButton"):
+		back_to_menu_button = menu_container.get_node("BackToMenuButton")
+	else:
+		back_to_menu_button = Button.new()
+		back_to_menu_button.name = "BackToMenuButton"
+		back_to_menu_button.text = "Back to Menu"
+		back_to_menu_button.custom_minimum_size = Vector2(260, 64)
+		back_to_menu_button.focus_mode = Control.FOCUS_ALL
+		back_to_menu_button.add_theme_font_size_override("font_size", 28)
+		back_to_menu_button.pressed.connect(_on_back_to_menu_button_pressed)
+		menu_container.add_child(back_to_menu_button)
+
+	if quit_button != null and back_to_menu_button.get_index() > quit_button.get_index():
+		menu_container.move_child(back_to_menu_button, quit_button.get_index())
 
 
 func _add_finish_portal() -> void:
